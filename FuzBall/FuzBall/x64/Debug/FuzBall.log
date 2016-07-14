@@ -1,0 +1,10 @@
+﻿Build started 7/14/2016 4:51:47 PM.
+     1>Project "C:\Users\yairle\Hackaton\Repo\InteractiveFoosball-Hackaton\FuzBall\FuzBall\FuzBall.vcxproj" on node 2 (Build target(s)).
+     1>Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\yairle\Hackaton\Repo\InteractiveFoosball-Hackaton\FuzBall\x64\Debug\FuzBall.exe" /INCREMENTAL /NOLOGO /LIBPATH:C:\openCV\opencv\build\x86\vc12\lib opencv_calib3d2413d.lib opencv_contrib2413d.lib opencv_core2413d.lib opencv_features2d2413d.lib opencv_flann2413d.lib opencv_gpu2413d.lib opencv_imgproc2413d.lib opencv_legacy2413d.lib opencv_ml2413d.lib opencv_nonfree2413d.lib opencv_objdetect2413d.lib opencv_ocl2413d.lib opencv_photo2413d.lib opencv_stitching2413d.lib opencv_superres2413d.lib opencv_ts2413d.lib opencv_video2413d.lib opencv_videostab2413d.lib opencv_highgui2413d.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\yairle\Hackaton\Repo\InteractiveFoosball-Hackaton\FuzBall\x64\Debug\FuzBall.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\yairle\Hackaton\Repo\InteractiveFoosball-Hackaton\FuzBall\x64\Debug\FuzBall.lib" /MACHINE:X64 x64\Debug\Main.obj
+     1>opencv_core2413d.lib(opencv_core2413d.dll) : fatal error LNK1112: module machine type 'X86' conflicts with target machine type 'x64'
+     1>Done Building Project "C:\Users\yairle\Hackaton\Repo\InteractiveFoosball-Hackaton\FuzBall\FuzBall\FuzBall.vcxproj" (Build target(s)) -- FAILED.
+
+Build FAILED.
+
+Time Elapsed 00:00:00.11
