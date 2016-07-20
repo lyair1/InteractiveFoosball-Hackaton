@@ -7,9 +7,9 @@ using namespace std;
 
 int main(int argc, char** argv)
 {
-	VideoCapture cap; //capture the video from webcam
+	VideoCapture cap(1); //capture the video from webcam
 	cap.set(CV_CAP_PROP_FOURCC, CV_FOURCC('A', 'V', 'C', '1'));
-	cap.open("C:\\Users\\yairle\\Hackaton\\Repo\\InteractiveFoosball-Hackaton\\FuzBall\\Debug\\FuzMovie.mp4");
+	//cap.open("C:\\Users\\yairle\\Hackaton\\Repo\\InteractiveFoosball-Hackaton\\FuzBall\\Debug\\FuzMovie.mp4");
 	if (!cap.isOpened())  // if not success, exit program
 	{
 		cout << "Failed to open video file!\n" << endl;
@@ -19,30 +19,40 @@ int main(int argc, char** argv)
 
 	namedWindow("Control", CV_WINDOW_AUTOSIZE); //create a window called "Control"
 
+	//// red Config
+	//int iLowH = 0;
+	//int iHighH = 179;
+
+	//int iLowS = 150;
+	//int iHighS = 255;
+
+	//int iLowV = 60;
+	//int iHighV = 255;
+
 	// white Config
-	int iLowH = 3;
-	int iHighH = 66;
+	//int iLowH = 3;
+	//int iHighH = 66;
 
-	int iLowS = 16;
-	int iHighS = 103;
+	//int iLowS = 16;
+	//int iHighS = 103;
 
-	int iLowV = 158;
-	int iHighV = 255;
+	//int iLowV = 158;
+	//int iHighV = 255;
 
 	
 	//// Blue Config
-	//int iLowH = 99;
-	//int iHighH = 114;
+	int iLowH = 99;
+	int iHighH = 114;
 
-	//int iLowS = 161;
-	//int iHighS = 255;
+	int iLowS = 161;
+	int iHighS = 255;
 
-	//int iLowV = 0;
-	//int iHighV = 255;
+	int iLowV = 0;
+	int iHighV = 255;
 
 	//Create trackbars in "Control" window
 	createTrackbar("LowH", "Control", &iLowH, 179); //Hue (0 - 179)
-	createTrackbar("HighH", "Control", &iHighH, 114);
+	createTrackbar("HighH", "Control", &iHighH, 179);
 
 	createTrackbar("LowS", "Control", &iLowS, 255); //Saturation (0 - 255)
 	createTrackbar("HighS", "Control", &iHighS, 255);
@@ -67,7 +77,7 @@ int main(int argc, char** argv)
 		Mat imgOriginal;
 		bool bSuccess = cap.read(imgOriginal); // read a new frame from video
 
-		if (counter++ % 3 == 0){
+		if (counter++ % 1 == 0){
 
 			if (!bSuccess) //if not success, break loop
 			{
@@ -108,7 +118,7 @@ int main(int argc, char** argv)
 				if (iLastX >= 0 && iLastY >= 0 && posX >= 0 && posY >= 0)
 				{
 					//Draw a red line from the previous point to the current point
-					line(imgLines, Point(posX, posY), Point(iLastX, iLastY), Scalar(0, 0, 255), 2);
+					//line(imgLines, Point(posX, posY), Point(iLastX, iLastY), Scalar(0, 0, 255), 2);
 				}
 
 				iLastX = posX;
