@@ -51,7 +51,7 @@ pts = deque(maxlen=args["buffer"])
 # created a *threaded *video stream, allow the camera senor to warmup,
 # and start the FPS counter
 print("[INFO] sampling THREADED frames from webcam...")
-vs = WebcamVideoStream(src=1).start()
+vs = WebcamVideoStream(src=0).start()
 # fps = FPS().start()
 
 
