@@ -55,7 +55,7 @@ vs = WebcamVideoStream(src=0).start()
 # fps = FPS().start()
 
 
-outStream = cv2.VideoWriter('output.avi', -1, 20.0, (640,480))
+#outStream = cv2.VideoWriter('output.avi', -1, 20.0, (640,480))
 
 # keep looping
 while True:
@@ -144,4 +144,4 @@ while True:
 # cleanup the camera and close any open windows
 cv2.destroyAllWindows()
 vs.stop()
-outStream.release()
+#outStream.release()
