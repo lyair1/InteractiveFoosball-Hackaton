@@ -18,12 +18,14 @@ Prepare your environment for Python:
 	TO: 
 		C:\Python27\Lib\site-packages
 		
-4. install Numpy from here: https://sourceforge.net/projects/numpy/files/NumPy/1.10.2/numpy-1.10.2-win32-superpack-python2.7.exe/download
-5. Add Python to your PATH environment variable: C:\Python27\
-6. Open the Commandline in administrator mode and go to: <REPO>\InteractiveFoosball-Hackaton\Python install\ and run 'python get-pip.py'
-7. Add Pip path to your Path Environment Variable: C:\Python27\Scripts\pip
-8. run in CMD: 'pip install imutils' 
-6. Open the Commandline in administrator mode and go to: <REPO>\InteractiveFoosball-Hackaton\Foos-Python\ball-tracking\ball-tracking\ 
+4. Add Python to your PATH environment variable: C:\Python27\
+5. Open the Commandline in administrator mode and go to: <REPO>\InteractiveFoosball-Hackaton\Python install\ and run 'python get-pip.py'
+6. Add Pip path to your Path Environment Variable: C:\Python27\Scripts\
+7. run in CMD: 'pip install imutils' 
+
+8. Open the CMD and run: 'pip install <REPO>\InteractiveFoosball-Hackaton\Python install\numpy-1.11.1+mkl-cp27-cp27m-win_amd64.whl'
+
+9. Open the Commandline in administrator mode and go to: <REPO>\InteractiveFoosball-Hackaton\Foos-Python\ball-tracking\ball-tracking\ 
 	and run: 'python ball_tracking.py'
 	
 	if everything worked fine you should see the webcamera
