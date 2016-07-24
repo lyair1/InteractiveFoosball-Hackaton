@@ -12,13 +12,13 @@ import imutils
 import cv2
 import time
 
-__ENABLE_VIDEO_OUT__ = False
-__DEBUG_PRINT__ = False
+__ENABLE_VIDEO_OUT__ = True
+__DEBUG_PRINT__ = True
 __PRINT_VECTOR_TO_FILE = True
 
 def getBallColor():
-	lower = (124, 91, 100)
-	upper = (179, 255, 255)
+	lower = (0, 0, 145)
+	upper = (179, 100, 255)
 
 	return lower,upper
 
@@ -26,16 +26,16 @@ def debugPrint(txt):
 	if __DEBUG_PRINT__:
 		print(txt)
 
-def savePtsVector(pts):
+def savePtsVector(pts,ticks):
 	if __PRINT_VECTOR_TO_FILE:
-		txtFile = open("Output/Vector" + str(int(time.time() * 1000)) + ".txt", "w")
-		for p in pts:
-			txtFile.write("{0}	{1}\n".format(p[0],p[1]))
-		
+		txtFile = open("Output/Vector" + ticks + ".txt", "w")
+		for (p1,p2) in pts:
+			txtFile.write("{0}	{1}".format(p1,p2) + "\n")
 		txtFile.close()
 
 def main():
-
+	points = []
+	ticks =str(int(time.time() * 1000))
 	# construct the argument parse and parse the arguments
 	ap = argparse.ArgumentParser()
 	ap.add_argument("-v", "--video",
@@ -64,7 +64,7 @@ def main():
 		vs = WebcamVideoStream(src=0).start()
 
 	if __ENABLE_VIDEO_OUT__:
-		outStream = cv2.VideoWriter('Output/output.avi', -1, 20.0, (640,480))
+		outStream = cv2.VideoWriter('Output/output' + ticks +'.avi', -1, 20.0, (640,420))
 
 	# keep looping
 	while True:
@@ -74,6 +74,8 @@ def main():
 		# resize the frame, blur it, and convert it to the HSV
 		# color space
 		frame = imutils.resize(frame, width=640)
+		frame = frame[50:470,0:640]
+
 		# blurred = cv2.GaussianBlur(frame, (11, 11), 0)
 		hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
@@ -101,7 +103,7 @@ def main():
 			center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
 
 			# only proceed if the radius meets a minimum size
-			if radius > 4: #Changed from 10
+			if radius > 2: #Changed from 10
 				# draw the circle and centroid on the frame,
 				# then update the list of tracked points
 				cv2.circle(frame, (int(x), int(y)), int(radius),
@@ -112,6 +114,10 @@ def main():
 		pts.appendleft(center)
 
 		debugPrint(center)
+		if center is None:
+			points.append((-1,-1))
+		else:
+			points.append(center)
 
 		# loop over the set of tracked points
 		for i in xrange(1, len(pts)):
@@ -140,7 +146,7 @@ def main():
 	# cleanup the camera and close any open windows
 	cv2.destroyAllWindows()
 	vs.stop()
-	savePtsVector(pts)
+	savePtsVector(points,ticks)
 	raise SystemExit
 	if __ENABLE_VIDEO_OUT__:
 		outStream.release()
