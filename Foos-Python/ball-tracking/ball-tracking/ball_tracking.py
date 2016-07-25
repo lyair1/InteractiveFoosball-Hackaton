@@ -11,9 +11,11 @@ import argparse
 import imutils
 import cv2
 import time
+import Algorithm
+from Algorithm import EventHook
 
 __ENABLE_VIDEO_OUT__ = True
-__DEBUG_PRINT__ = True
+__DEBUG_PRINT__ = False
 __PRINT_VECTOR_TO_FILE = True
 
 def getBallColor():
@@ -64,7 +66,9 @@ def main():
 		vs = WebcamVideoStream(src=0).start()
 
 	if __ENABLE_VIDEO_OUT__:
-		outStream = cv2.VideoWriter('Output/output' + ticks +'.avi', -1, 20.0, (640,420))
+		outStream = cv2.VideoWriter('Output/output' + ticks +'.avi', -1, 20.0, (640,425))
+
+	eventHook = EventHook()
 
 	# keep looping
 	while True:
@@ -74,7 +78,7 @@ def main():
 		# resize the frame, blur it, and convert it to the HSV
 		# color space
 		frame = imutils.resize(frame, width=640)
-		frame = frame[50:470,0:640]
+		frame = frame[45:470,0:640]
 
 		# blurred = cv2.GaussianBlur(frame, (11, 11), 0)
 		hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
@@ -142,6 +146,13 @@ def main():
 		# if the 'q' key is pressed, stop the loop
 		if key == ord("q"):
 			break
+
+		if center is None:
+			eventHook.fire([(-1,-1)])
+		else:
+			normalizePoint = (int(2000*float(center[0]/640.0)),int(1000*float(center[1]/420.0)))
+			eventHook.fire([normalizePoint])
+			debugPrint(normalizePoint)
 
 	# cleanup the camera and close any open windows
 	cv2.destroyAllWindows()

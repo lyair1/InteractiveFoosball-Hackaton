@@ -13,12 +13,26 @@ def debugPrint(txt):
 	if __DEBUG_PRINT__:
 		print(txt)
 
+class GuiHttpClient(object):
+	def SendEvent(self, action, team):
+		# r = requests.post('http://localhost/foosballApi/', data = action + '*' + team)
+		# if(r.status_code != requests.codes.ok):
+		# 	r.raise_for_status()
+		debugPrint("Send event")
+
+	def SendStats(self, redTeamAttacks, blueTeamAttacks):
+		debugPrint("End SendStats")
+
+
 class Algorithm:
 	Length = 5
 	Width = 3
 	NoneCountTH = 8
 	possesionMatrix = []
 	noneCount = 0
+	httpClient = GuiHttpClient()
+	redDangerZoneCount = 0
+	blueDangerZoneCount = 0
 
 	def inArea(self, point, lowX, highX, lowY, highY):
 		if (point[0]>lowX and point[0]<highX and point[1]>lowY and point[1]<highY):
@@ -30,41 +44,44 @@ class Algorithm:
 		return self.inArea(point, 0, 1000, 800, 1200)
 					  
 	def inRedDangerZone(self, point):
-		return self.inArea(point, 200, 800, 0, 250)
+		return self.inArea(point, 200, 800, 0, 700)
 		
 	def inBlueDangerZone(self, point):
-		return self.inArea(point, 200, 800, 1750, 2000)
+		return self.inArea(point, 200, 800, 1300, 2000)
 	
 	def HandleOOF(self, point):
 		if (self.inCenter(point)):
 			self.state = STATE.IN_PLAY
-			sendEvent(EVENT.START, 1)
+			self.debugFile.write("Game Started \n")
+			self.httpClient.SendEvent(EVENT.START, 1)
 		debugPrint("End HandleOOF")
 		
 	def HandleDangerZone(self, point):
-		if (noneCount == NoneCountTH):
+		if (self.noneCount == self.NoneCountTH):
 			if (self.state == STATE.DANGER_ZONE_RED):
-				sendEvent(EVENT.GOAL, 'BLUE')
+				self.httpClient.SendEvent(EVENT.GOAL, 'BLUE')
+				self.debugFile.write("Blue Goal\n")
 			else:
-				sendEvent(EVENT.GOAL, 'RED')
+				self.httpClient.SendEvent(EVENT.GOAL, 'RED')
+				self.debugFile.write("Red Goal\n")
 			self.state = STATE.OOF
-		if not(self.inDangerZoneRed(point) or self.inDangerZoneBlue(point)):
+		if not(self.inRedDangerZone(point) or self.inBlueDangerZone(point)):
 			self.state = STATE.IN_PLAY
 		debugPrint("End HandleDangerZone")
 
 	def HandleInPlay(self, point):
-		if (self.inDangerZoneRed(point)):
+		if (self.inRedDangerZone(point)):
 			self.state = STATE.DANGER_ZONE_RED
-			redDangerZoneCount+=1
-		if (self.inDangerZoneBlue(point)):
+			self.redDangerZoneCount+=1
+		if (self.inBlueDangerZone(point)):
 			self.state = STATE.DANGER_ZONE_BLUE
-			blueDangerZoneCount+=1
+			self.blueDangerZoneCount+=1
 		debugPrint("End HandleDangerZone")	
 
 	def __init__(self):
 		self.state = STATE.OOF
-		redDangerZoneCount = 0
-		blueDangerZoneCount = 0
+		self.redDangerZoneCount = 0
+		self.blueDangerZoneCount = 0
 		for i in range(self.Width):
 			self.possesionMatrix.append([])
 			for j in range(self.Length):
@@ -80,9 +97,9 @@ class Algorithm:
 			#############################################################
 
 			if (point[0] == -1 and point[1] == -1):
-				noneCount+=1
+				self.noneCount += 1
 			else:
-				noneCount = 0
+				self.noneCount = 0
 
 			###### Call the relevant handler according the state ##############################
 			if (self.state == STATE.IN_PLAY):
@@ -92,25 +109,12 @@ class Algorithm:
 			if (self.state == STATE.OOF):
 				self.HandleOOF(point)
 
-			self.debugFile.write("Point: " + str(point[0]) + "," + str(point[1]))
+			self.debugFile.write("Point: " + str(point[0]) + "," + str(point[1]) + "\n")
 			debugPrint("Point: " + str(point[0]) + "," + str(point[1]))
-			self.debugFile.write("state: " + str(self.state))
+			self.debugFile.write("state: " + str(self.state) + "\n")
 			debugPrint("state: " + str(self.state))
-
-
-class GuiHttpClient(object):
-
-	def SendEvent(self, action, team):
-		r = requests.post('http://localhost/foosballApi/', data = action + '*' + team)
-		if(r.status_code != requests.codes.ok):
-			r.raise_for_status()
-
-        def SendStats(self, redTeamAttacks, blueTeamAttacks):
-                ebugPrint("End SendStats")
-
 		
 class EventHook(object):
-
 	def __init__(self):
 		self._Algo = Algorithm()
 
