@@ -1,0 +1,17 @@
+C:\Users\moshec\Documents\InteractiveFoosball-Hackaton\GUI\Foosball.UI\Foosball.UI\bin\Debug\Foosball.UI.exe.config
+C:\Users\moshec\Documents\InteractiveFoosball-Hackaton\GUI\Foosball.UI\Foosball.UI\bin\Debug\Foosball.UI.exe
+C:\Users\moshec\Documents\InteractiveFoosball-Hackaton\GUI\Foosball.UI\Foosball.UI\bin\Debug\Foosball.UI.pdb
+C:\Users\moshec\Documents\InteractiveFoosball-Hackaton\GUI\Foosball.UI\Foosball.UI\obj\Debug\Foosball.UI.csprojResolveAssemblyReference.cache
+C:\Users\moshec\Documents\InteractiveFoosball-Hackaton\GUI\Foosball.UI\Foosball.UI\obj\Debug\MainWindow.baml
+C:\Users\moshec\Documents\InteractiveFoosball-Hackaton\GUI\Foosball.UI\Foosball.UI\obj\Debug\MainWindow.g.cs
+C:\Users\moshec\Documents\InteractiveFoosball-Hackaton\GUI\Foosball.UI\Foosball.UI\obj\Debug\App.g.cs
+C:\Users\moshec\Documents\InteractiveFoosball-Hackaton\GUI\Foosball.UI\Foosball.UI\obj\Debug\Foosball.UI_MarkupCompile.cache
+C:\Users\moshec\Documents\InteractiveFoosball-Hackaton\GUI\Foosball.UI\Foosball.UI\obj\Debug\Foosball.UI.g.resources
+C:\Users\moshec\Documents\InteractiveFoosball-Hackaton\GUI\Foosball.UI\Foosball.UI\obj\Debug\Foosball.UI.Properties.Resources.resources
+C:\Users\moshec\Documents\InteractiveFoosball-Hackaton\GUI\Foosball.UI\Foosball.UI\obj\Debug\Foosball.UI.csproj.GenerateResource.Cache
+C:\Users\moshec\Documents\InteractiveFoosball-Hackaton\GUI\Foosball.UI\Foosball.UI\obj\Debug\Foosball.UI.exe
+C:\Users\moshec\Documents\InteractiveFoosball-Hackaton\GUI\Foosball.UI\Foosball.UI\obj\Debug\Foosball.UI.pdb
+C:\Users\moshec\Documents\InteractiveFoosball-Hackaton\GUI\Foosball.UI\Foosball.UI\bin\Debug\Goal-Brazil.mp3
+C:\Users\moshec\Documents\InteractiveFoosball-Hackaton\GUI\Foosball.UI\Foosball.UI\bin\Debug\Goal-Meir.mp3
+C:\Users\moshec\Documents\InteractiveFoosball-Hackaton\GUI\Foosball.UI\Foosball.UI\bin\Debug\Open.mp3
+C:\Users\moshec\Documents\InteractiveFoosball-Hackaton\GUI\Foosball.UI\Foosball.UI\obj\Debug\Foosball.UI_Content.g.cs
