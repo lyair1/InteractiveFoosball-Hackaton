@@ -27,27 +27,31 @@ class GuiHttpClient(object):
 class Algorithm:
 	Length = 5
 	Width = 3
-	NoneCountTH = 8
+	NoneCountTH = 20
 	possesionMatrix = []
 	noneCount = 0
 	httpClient = GuiHttpClient()
 	redDangerZoneCount = 0
 	blueDangerZoneCount = 0
+	noise = 0
 
 	def inArea(self, point, lowX, highX, lowY, highY):
 		if (point[0]>lowX and point[0]<highX and point[1]>lowY and point[1]<highY):
 			return True
 		else:
 			return False         
-	
+	def isNone(self, point):
+		if (point[0] == -1 and point[1] == -1):
+			return True
+
 	def inCenter(self, point):
-		return self.inArea(point, 0, 1000, 800, 1200)
+		return self.inArea(point, 700, 1300, 0, 1000)
 					  
 	def inRedDangerZone(self, point):
-		return self.inArea(point, 200, 800, 0, 700)
+		return self.inArea(point, 0, 700, 200, 800)
 		
 	def inBlueDangerZone(self, point):
-		return self.inArea(point, 200, 800, 1300, 2000)
+		return self.inArea(point, 1300, 2000, 200, 800)
 	
 	def HandleOOF(self, point):
 		if (self.inCenter(point)):
@@ -65,7 +69,7 @@ class Algorithm:
 				self.httpClient.SendEvent(EVENT.GOAL, 'RED')
 				self.debugFile.write("Red Goal\n")
 			self.state = STATE.OOF
-		if not(self.inRedDangerZone(point) or self.inBlueDangerZone(point)):
+		if not(self.inRedDangerZone(point) or self.inBlueDangerZone(point) or self.isNone(point)):
 			self.state = STATE.IN_PLAY
 		debugPrint("End HandleDangerZone")
 
@@ -99,7 +103,11 @@ class Algorithm:
 			if (point[0] == -1 and point[1] == -1):
 				self.noneCount += 1
 			else:
-				self.noneCount = 0
+				if self.noneCount > 4 and self.noise < 10 :
+					self.noise+=1
+				else:
+					self.noneCount = 0
+					self.noise = 0
 
 			###### Call the relevant handler according the state ##############################
 			if (self.state == STATE.IN_PLAY):
