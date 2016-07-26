@@ -81,11 +81,11 @@ class Algorithm:
 		debugPrint("End HandleInPlay")	
 		
 	def IncreasePossession(self, point):
-		if (self.inRedDangerZone(point)):
+		if(self.inRedDangerZone(point)):
 			self.redDangerZoneCount+=1
-		else if (self.inBlueDangerZone(point)):
+		elif(self.inBlueDangerZone(point)):
 			self.blueDangerZoneCount+=1
-		else if(self.inCenter(point)):
+		elif(self.inCenter(point)):
 			self.centerZoneCount+=1
 		
 		sumPossession = self.redDangerZoneCount + self.blueDangerZoneCount + self.centerZoneCount
