@@ -19,17 +19,31 @@ class GuiHttpClient(object):
 		event = ""
 		if(action == 0):
 			event = "Goal"
-		else:
+		if(action == 1):
 			event = "Start"
-		r = requests.post('http://localhost/foosballApi/', data = event + '*' + team)
-		if(r.status_code != requests.codes.ok):
-			r.raise_for_status()
+		if(action == 2):
+			event = "Miss"
+		# r = requests.post('http://localhost/foosballApi/', data = event + '*' + team)
+		# if(r.status_code != requests.codes.ok):
+			# r.raise_for_status()
+		debugPrint("event + '*' + team")
+
 		debugPrint("Send event")
 
 	def SendPossession(self, blue, center, red):
+		# r = requests.post('http://localhost/foosballApi/', data = "Possession" + '*' + blue + '*' + center+ '*' + red)
+		# if(r.status_code != requests.codes.ok):
+			# r.raise_for_status()
+		debugPrint("Possession" + '*' + str(blue) + '*' + str(center)+ '*' + str(red))
+
 		debugPrint("End SendPossessions")
 
 	def sendHotSpots(self, possessionMatrix):
+		# r = requests.post('http://localhost/foosballApi/', data = "HotSpots" + '*' + possessionMatrix)
+		# if(r.status_code != requests.codes.ok):
+			# r.raise_for_status()
+		debugPrint("HotSpots" + '*' + str(possessionMatrix[0][0]))
+
 		debugPrint("End SendHotSpot")
 
 class Algorithm:
@@ -120,11 +134,11 @@ class Algorithm:
 	# handling miss by detecting ball entering and leaving goal zone
 	def HandleMiss(self, point):
 		if(self.inGoalZone):
-			if((not inBlueGoalZone(point)) and not (inRedGoalZone(point)) and not(self.isNone(point))):
+			if((not self.inBlueGoalZone(point)) and not (self.inRedGoalZone(point)) and not(self.isNone(point))):
 				self.inGoalZone = False
 				self.debugFile.write("leaved goal zone")
-				if(self.enteredGoalZonePoint + MissPointCountTH >= self.pointsCount):
-					self.httpClient.SendEvent(EVENT.MISS, '')
+				if(self.enteredGoalZonePoint + self.MissPointCountTH >= self.pointsCount):
+					self.httpClient.SendEvent(EVENT.Miss, '')
 					self.debugFile.write("Sending MISS")
 		else:
 			if(self.inBlueGoalZone(point) or self.inRedGoalZone(point)):
@@ -144,7 +158,7 @@ class Algorithm:
 				self.possessionMatrix[i].append(0)
 
 
-		self.debugFile = open("debug", "w")
+		self.debugFile = open("debug.txt", "w")
 		debugPrint("End main")
 		
 	def AddPoints(self, pointsArray):
@@ -187,8 +201,13 @@ class EventHook(object):
 		self._Algo.AddPoints(*array)
 
 def main():
-	x = EventHook()
-	x.fire([[1000,900]])
+	y = EventHook()
+	
+	with open("D:\hackathon2016\Algorithm\Data\Vector1469369882184.txt") as f:
+		content = f.readlines()
+	content2 = [[int(x) for x in thing.replace('\n', '').split('\t')] for thing in content]
+	# print(content2)
+	y.fire(content2)
 	
 
 if __name__ == "__main__":
