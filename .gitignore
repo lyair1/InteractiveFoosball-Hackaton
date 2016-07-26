@@ -5,3 +5,7 @@ Foos-Python/ball-tracking/ball-tracking/desktop.ini
 Foos-Python/ball-tracking/ball-tracking/output.avi
 Foos-Python/ball-tracking/ball-tracking/Output/*.mp4
 Foos-Python/.idea/
+*.pyc
+*.txt
+Foos-Python/ball-tracking/ball-tracking/Output/
+Foos-Python/ball-tracking/ball-tracking/debug

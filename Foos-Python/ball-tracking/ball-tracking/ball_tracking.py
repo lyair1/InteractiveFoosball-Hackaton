@@ -14,7 +14,7 @@ import time
 import Algorithm
 from Algorithm import EventHook
 
-__ENABLE_VIDEO_OUT__ = True
+__ENABLE_VIDEO_OUT__ = False
 __DEBUG_PRINT__ = False
 __PRINT_VECTOR_TO_FILE = True
 
@@ -66,7 +66,7 @@ def main():
 		vs = WebcamVideoStream(src=0).start()
 
 	if __ENABLE_VIDEO_OUT__:
-		outStream = cv2.VideoWriter('Output/output' + ticks +'.avi', -1, 20.0, (640,425))
+		outStream = cv2.VideoWriter('Output/output' + ticks +'.avi', -1, 20.0, (1000,700))
 
 	eventHook = EventHook()
 
@@ -77,8 +77,8 @@ def main():
 
 		# resize the frame, blur it, and convert it to the HSV
 		# color space
-		frame = imutils.resize(frame, width=640)
-		frame = frame[45:470,0:640]
+		frame = imutils.resize(frame, width=1000)
+		frame = frame[40:745,0:1000]
 
 		# blurred = cv2.GaussianBlur(frame, (11, 11), 0)
 		hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
@@ -107,7 +107,7 @@ def main():
 			center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
 
 			# only proceed if the radius meets a minimum size
-			if radius > 2: #Changed from 10
+			if radius > -1: #Changed from 10
 				# draw the circle and centroid on the frame,
 				# then update the list of tracked points
 				cv2.circle(frame, (int(x), int(y)), int(radius),
@@ -150,7 +150,7 @@ def main():
 		if center is None:
 			eventHook.fire([(-1,-1)])
 		else:
-			normalizePoint = (int(2000*float(center[0]/640.0)),int(1000*float(center[1]/420.0)))
+			normalizePoint = (int(2000*float(center[0]/1000.0)),int(1000*float(center[1]/705.0)))
 			eventHook.fire([normalizePoint])
 			debugPrint(normalizePoint)
 

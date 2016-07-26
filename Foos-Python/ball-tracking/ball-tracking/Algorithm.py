@@ -6,7 +6,7 @@ def enum(**enums):
     return type('Enum', (), enums)
 	
 STATE = enum(IN_PLAY=0, DANGER_ZONE_RED=1, DANGER_ZONE_BLUE=2, OOF=3)
-EVENT = enum(GOAL=0, START=1)
+EVENT = enum(Goal=0, Start=1)
 
 __DEBUG_PRINT__ = True
 def debugPrint(txt):
@@ -15,9 +15,14 @@ def debugPrint(txt):
 
 class GuiHttpClient(object):
 	def SendEvent(self, action, team):
-		# r = requests.post('http://localhost/foosballApi/', data = action + '*' + team)
-		# if(r.status_code != requests.codes.ok):
-		# 	r.raise_for_status()
+		event = ""
+		if(action == 0):
+			event = "Goal"
+		else:
+			event = "Start"
+		r = requests.post('http://localhost/foosballApi/', data = event + '*' + team)
+		if(r.status_code != requests.codes.ok):
+			r.raise_for_status()
 		debugPrint("Send event")
 
 	def SendStats(self, redTeamAttacks, blueTeamAttacks):
@@ -61,16 +66,16 @@ class Algorithm:
 		if (self.inCenter(point)):
 			self.state = STATE.IN_PLAY
 			self.debugFile.write("Game Started \n")
-			self.httpClient.SendEvent(EVENT.START, 1)
+			self.httpClient.SendEvent(EVENT.Start, 'Blue')
 		debugPrint("End HandleOOF")
 		
 	def HandleDangerZone(self, point):
 		if (self.noneCount == self.NoneCountTH):
 			if (self.state == STATE.DANGER_ZONE_RED):
-				self.httpClient.SendEvent(EVENT.GOAL, 'BLUE')
+				self.httpClient.SendEvent(EVENT.Goal, 'Blue')
 				self.debugFile.write("Blue Goal\n")
 			else:
-				self.httpClient.SendEvent(EVENT.GOAL, 'RED')
+				self.httpClient.SendEvent(EVENT.Goal, 'Red')
 				self.debugFile.write("Red Goal\n")
 			self.state = STATE.OOF
 		if not(self.inRedDangerZone(point) or self.inBlueDangerZone(point) or self.isNone(point)):
@@ -92,9 +97,9 @@ class Algorithm:
 		elif(self.inCenter(point)):
 			self.centerZoneCount+=1
 		
-		sumPossession = self.redDangerZoneCount + self.blueDangerZoneCount + self.centerZoneCount
-		if(sumPossession % 10 ==0):
-			self.httpClient.SendEvent(EVENT.POSSESSION, self.blueDangerZoneCount/float(sumPossession), self.centerZoneCount/float(sumPossession), self.redDangerZoneCount/float(sumPossession))
+		#sumPossession = self.redDangerZoneCount + self.blueDangerZoneCount + self.centerZoneCount
+		#if(sumPossession % 10 ==0):
+		#	self.httpClient.SendEvent(EVENT.POSSESSION, self.blueDangerZoneCount/float(sumPossession), self.centerZoneCount/float(sumPossession), self.redDangerZoneCount/float(sumPossession))
 
 			
 	def __init__(self):
