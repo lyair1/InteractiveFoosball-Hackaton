@@ -27,3 +27,8 @@ C:\Users\moshec\Documents\InteractiveFoosball-Hackaton\GUI\Foosball.UI\Foosball.
 C:\Users\moshec\Documents\InteractiveFoosball-Hackaton\GUI\Foosball.UI\Foosball.UI\bin\Debug\Resources\Best100GoalsCutNoSound.mp4
 C:\Users\moshec\Documents\InteractiveFoosball-Hackaton\GUI\Foosball.UI\Foosball.UI\bin\Debug\Resources\Win.mp3
 C:\Users\moshec\Documents\InteractiveFoosball-Hackaton\GUI\Foosball.UI\Foosball.UI\bin\Debug\Resources\Win.gif
+C:\Users\moshec\Documents\InteractiveFoosball-Hackaton\GUI\Foosball.UI\Foosball.UI\bin\Debug\Resources\fire1.gif
+C:\Users\moshec\Documents\InteractiveFoosball-Hackaton\GUI\Foosball.UI\Foosball.UI\bin\Debug\Resources\fire2.gif
+C:\Users\moshec\Documents\InteractiveFoosball-Hackaton\GUI\Foosball.UI\Foosball.UI\bin\Debug\Resources\fire3.gif
+C:\Users\moshec\Documents\InteractiveFoosball-Hackaton\GUI\Foosball.UI\Foosball.UI\bin\Debug\Resources\fire4.gif
+C:\Users\moshec\Documents\InteractiveFoosball-Hackaton\GUI\Foosball.UI\Foosball.UI\bin\Debug\Resources\table.jpg

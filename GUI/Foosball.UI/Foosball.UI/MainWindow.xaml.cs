@@ -110,7 +110,7 @@ namespace Foosball.UI
 
             if (this.redScore == 2 || this.blueScore == 2)
             {
-                Win();
+                Win(this.redScore > this.blueScore ? Colors.Red : Colors.Blue);
                 return;
             }
 
@@ -119,6 +119,7 @@ namespace Foosball.UI
                 Dispatcher.Invoke(() =>
                 {
                     this.DockPanel.Children.Clear();
+                    this.DockPanel.Background = new SolidColorBrush(Colors.Blue);
                     this.DockPanel.Children.Add(new MediaElement
                     {
                         Height = 550,
@@ -138,7 +139,11 @@ namespace Foosball.UI
                 Task.Factory.StartNew(() =>
                 {
                     Task.Delay(13000).Wait();
-                    Dispatcher.Invoke(() => { this.DockPanel.Children.Clear(); });
+                    Dispatcher.Invoke(() =>
+                    {
+                        this.DockPanel.Background = new SolidColorBrush(Colors.Transparent);
+                        this.DockPanel.Children.Clear();
+                    });
                 });
             }
             else // RED
@@ -146,6 +151,7 @@ namespace Foosball.UI
                 Dispatcher.Invoke(() =>
                 {
                     this.DockPanel.Children.Clear();
+                    this.DockPanel.Background = new SolidColorBrush(Colors.Red);
                     this.DockPanel.Children.Add(new MediaElement
                     {
                         Height = 900,
@@ -165,7 +171,11 @@ namespace Foosball.UI
                 Task.Factory.StartNew(() =>
                 {
                     Task.Delay(7000).Wait();
-                    Dispatcher.Invoke(() => { this.DockPanel.Children.Clear(); });
+                    Dispatcher.Invoke(() =>
+                    {
+                        this.DockPanel.Background = new SolidColorBrush(Colors.Transparent);
+                        this.DockPanel.Children.Clear();
+                    });
                 });
             }
 
@@ -174,7 +184,7 @@ namespace Foosball.UI
             mediaPlayer.Play();
         }
 
-        private void Win()
+        private void Win(Color winnerColor)
         {
             if (this.blueScore == 10)
             {
@@ -184,18 +194,41 @@ namespace Foosball.UI
             Dispatcher.Invoke(() =>
             {
                 this.DockPanel.Children.Clear();
+                this.DockPanel.Background = new SolidColorBrush(winnerColor);
+                this.DockPanel.Orientation = Orientation.Horizontal;
                 this.DockPanel.Children.Add(new MediaElement
                 {
-                    Height = 700,
-                    Width = 700,
-                    Source = new Uri(Path.Combine(Directory.GetCurrentDirectory(), "Resources", "Win.gif")),
-                    Margin = new Thickness(0, 0, 0, 0)
+                    Height = 600,
+                    Width = 600,
+                    Source = new Uri(Path.Combine(Directory.GetCurrentDirectory(), "Resources", "fire1.gif")),
+                    Margin = new Thickness(30, -600, 0, 0)
+                });
+                this.DockPanel.Children.Add(new MediaElement
+                {
+                    Height = 600,
+                    Width = 600,
+                    Source = new Uri(Path.Combine(Directory.GetCurrentDirectory(), "Resources", "fire2.gif")),
+                    Margin = new Thickness(30, 300, 0, 0)
+                });
+                this.DockPanel.Children.Add(new MediaElement
+                {
+                    Height = 600,
+                    Width = 600,
+                    Source = new Uri(Path.Combine(Directory.GetCurrentDirectory(), "Resources", "fire4.gif")),
+                    Margin = new Thickness(30, -600, 0, 0)
+                });
+                this.DockPanel.Children.Add(new MediaElement
+                {
+                    Height = 600,
+                    Width = 600,
+                    Source = new Uri(Path.Combine(Directory.GetCurrentDirectory(), "Resources", "fire3.gif")),
+                    Margin = new Thickness(30, 100, 0, 0)
                 });
             });
 
             Task.Factory.StartNew(() =>
             {
-                Task.Delay(34000).Wait();
+                Task.Delay(50000).Wait();
                 Dispatcher.Invoke(() => { this.DockPanel.Children.Clear(); });
             });
 
