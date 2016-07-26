@@ -54,6 +54,7 @@ class Algorithm:
 	NoneCountTH = 20
 	MissPointCountTH = 15
 	inGoalZone = False
+	attacker = 'Red'
 	enteredGoalZonePoint = -50
 	
 	possessionMatrix = []
@@ -139,12 +140,16 @@ class Algorithm:
 				self.inGoalZone = False
 				self.debugFile.write("leaved goal zone")
 				if(self.enteredGoalZonePoint + self.MissPointCountTH >= self.pointsCount):
-					self.httpClient.SendEvent(EVENT.Miss, '')
+					self.httpClient.SendEvent(EVENT.Miss, attacker)
 					self.debugFile.write("Sending MISS")
 		else:
 			if(self.inBlueGoalZone(point) or self.inRedGoalZone(point)):
 				self.inGoalZone = True
-				self.debugFile.write("wntered goal zone")
+				if self.inBlueGoalZone:
+					attacker = 'Red'
+				else:
+					attacker = 'Blue'
+				self.debugFile.write("entered goal zone")
 				self.enteredGoalZonePoint = self.pointsCount
 
 			
@@ -204,11 +209,11 @@ class EventHook(object):
 def main():
 	y = EventHook()
 	
-	with open("D:\hackathon2016\Algorithm\Data\Vector1469369882184.txt") as f:
-		content = f.readlines()
-	content2 = [[int(x) for x in thing.replace('\n', '').split('\t')] for thing in content]
+	#with open("D:\hackathon2016\Algorithm\Data\Vector1469369882184.txt") as f:
+	#	content = f.readlines()
+	#content2 = [[int(x) for x in thing.replace('\n', '').split('\t')] for thing in content]
 	# print(content2)
-	y.fire(content2)
+	y.fire([[800,800]])
 	
 
 if __name__ == "__main__":
