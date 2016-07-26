@@ -20,14 +20,18 @@ __PRINT_VECTOR_TO_FILE = True
 
 replayFrames = []
 
+
 def saveGoalVideo():
-	_outStream = cv2.VideoWriter('Output/output_Goal.avi', -1, 20.0, (1000,700))
+	goalOutStream = cv2.VideoWriter('Output/output_Goal.avi', 0, 20.0, (1000,705))
+	print("saving goal")
+	for f in replayFrames[0:100]:
+		goalOutStream.write(f)
+	goalOutStream.release()
 
 def addReplayFrame(_frame):
 	if len(replayFrames) >= 30*4:
 		replayFrames.pop(0)
-	else:
-		replayFrames.append(_frame)
+	replayFrames.append(_frame)
 
 def getBallColor():
 	lower = (0, 0, 145)
@@ -169,7 +173,9 @@ def main():
 				saveGoalVideo()
 		else:
 			normalizePoint = (int(2000*float(center[0]/1000.0)),int(1000*float(center[1]/705.0)))
-			eventHook.fire([normalizePoint])
+			if eventHook.fire([normalizePoint]):
+				saveGoalVideo()
+
 			debugPrint(normalizePoint)
 
 	# cleanup the camera and close any open windows

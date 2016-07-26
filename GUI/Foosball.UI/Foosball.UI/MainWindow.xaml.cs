@@ -31,6 +31,8 @@ namespace Foosball.UI
         private int redScore = 0;
         private int blueScore = 0;
 
+        private static Random rand = new Random();
+
         private readonly List<string> goalList = new List<string>
         {
             "BrazilGolaso1.mp3",
@@ -218,11 +220,35 @@ namespace Foosball.UI
 
                 Task.Factory.StartNew(() =>
                 {
-                    Task.Delay(13000).Wait();
+                    Task.Delay(4000).Wait();
                     Dispatcher.Invoke(() =>
                     {
                         this.DockPanel.Background = new SolidColorBrush(Colors.Transparent);
                         this.DockPanel.Children.Clear();
+                        var player = new MediaElement
+                        {
+                            LoadedBehavior = MediaState.Manual,
+                            Source =
+                                new Uri(
+                                    Path.Combine(
+                                        "C:/Users/moshec/Documents/InteractiveFoosball-Hackaton/Foos-Python/ball-tracking/ball-tracking/Output/output_Goal.avi"))
+                        };
+                        this.MainGrid.Children.Add(player);
+                        Grid.SetColumnSpan(player, 2);
+                        Grid.SetRowSpan(player, 2);
+                        player.Play();
+                    });
+                });
+
+                Task.Factory.StartNew(() =>
+                {
+                    Task.Delay(7000).Wait();
+                    Dispatcher.Invoke(() =>
+                    {
+                        this.DockPanel.Background = new SolidColorBrush(Colors.Transparent);
+                        this.DockPanel.Children.Clear();
+                        this.MainGrid.Children.Remove(this.MainGrid.Children.OfType<MediaElement>().Single());
+                        File.Delete("C:/Users/moshec/Documents/InteractiveFoosball-Hackaton/Foos-Python/ball-tracking/ball-tracking/Output/output_Goal.avi");
                     });
                 });
             }
@@ -260,7 +286,7 @@ namespace Foosball.UI
             }
 
 
-            int randomNum = new Random().Next(0, this.goalList.Count-1);
+            int randomNum = rand.Next(0, this.goalList.Count-1);
             PlayFile(this.goalList[randomNum]);
         }
 

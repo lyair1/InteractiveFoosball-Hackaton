@@ -9,7 +9,7 @@ STATE = enum(IN_PLAY=0, DANGER_ZONE_RED=1, DANGER_ZONE_BLUE=2, OOF=3)
 
 EVENT = enum(Goal=0, Start=1, Miss=2)
 
-__DEBUG_PRINT__ = True
+__DEBUG_PRINT__ = False
 def debugPrint(txt):
 	if __DEBUG_PRINT__:
 		print(txt)
