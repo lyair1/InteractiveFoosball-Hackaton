@@ -28,9 +28,15 @@ class Algorithm:
 	NoneCountTH = 35
 	Length = 2000
 	Width = 1000
+	
 	NoneCountTH = 20
+	MissPointCountTH = 15
+	inGoalZone = false
+	enteredGoalZonePoint = -50
+	
 	possessionMatrix = []
 	noneCount = 0
+	pointsCount = 0
 	httpClient = GuiHttpClient()
 	redDangerZoneCount = 0
 	blueDangerZoneCount = 0
@@ -54,7 +60,13 @@ class Algorithm:
 		
 	def inBlueDangerZone(self, point):
 		return self.inArea(point, 1300, 2000, 200, 800)
-	
+		
+	def inRedGoalZone(self, point):
+		return self.inArea(point, 0, 200, 250, 750)
+		
+	def inBlueGoalZone(self, point):
+		return self.inArea(point, 1800, 2000, 250, 750)
+
 	def HandleOOF(self, point):
 		if (self.inCenter(point)):
 			self.state = STATE.IN_PLAY
@@ -96,6 +108,19 @@ class Algorithm:
 			
 		if(sumPossession % 500 == 0):
 			self.httpClient.sendEvent(EVENT.HOTSPOTS, self.possesionMatrix)
+			
+	# handling miss by detecting ball entering and leaving goal zone
+	def HandleMiss(self, point):
+		if(inGoalZone):
+			if((not inBlueGoalZone(point)) and not (inRedGoalZone(point))):
+				self.inGoalZone = false
+				if(self.enteredGoalZonePoint + MissPointCountTH >= self.pointsCount):
+					self.httpClient.SendEvent(EVENT.MISS, 'MISS')
+		else:
+			if(inBlueGoalZone(point) or inRedGoalZone(point)):
+				self.inGoalZone = true
+				self.enteredGoalZonePoint = self.pointsCount
+				
 
 			
 	def __init__(self):
@@ -104,9 +129,9 @@ class Algorithm:
 		self.blueDangerZoneCount = 0
 		
 		for i in range(self.Width / 100):
-            self.possesionMatrix.append([])
-            for j in range(self.Length / 100):
-                self.possesionMatrix[i].append(0)
+			self.possesionMatrix.append([])
+			for j in range(self.Length / 100):
+				self.possesionMatrix[i].append(0)
 
 
 		self.debugFile = open("debug", "w")
@@ -115,7 +140,9 @@ class Algorithm:
 	def AddPoints(self, pointsArray):
 		for point in pointsArray :
 			lastState = self.state
+			pointsCount += 1 
 			self.IncreasePossession(point)
+			self.HandleMiss(Point)
 			#############################################################
 
 			if (point[0] == -1 and point[1] == -1):
