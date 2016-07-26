@@ -63,16 +63,6 @@ namespace Foosball.UI
             });
         }
 
-        private void PlayFile(string file)
-        {
-            Dispatcher.Invoke(() =>
-            {
-                this.mediaPlayer.Stop();
-                this.mediaPlayer = new MediaPlayer();
-                this.mediaPlayer.Open(new Uri(Path.Combine(Directory.GetCurrentDirectory(), "Resources", file)));
-                this.mediaPlayer.Play();
-            });
-        }
 
         private void OnNewGame(Team team)
         {
@@ -102,6 +92,7 @@ namespace Foosball.UI
 
         private void OnStartEvent(Team team)
         {
+            Dispatcher.Invoke(() => this.DockPanel.Children.Clear();)
             PlayFile("StartGame.mp3");
         }
 
@@ -194,11 +185,6 @@ namespace Foosball.UI
 
         private void Win(Color winnerColor)
         {
-            if (this.blueScore == 10)
-            {
-                
-            }
-
             Dispatcher.Invoke(() =>
             {
                 this.DockPanel.Children.Clear();
@@ -271,6 +257,7 @@ namespace Foosball.UI
             Dispatcher.Invoke(ChangeBgColor);
         }
 
+       
         private void UpdateScoreBoard()
         {
             Dispatcher.Invoke(() =>
@@ -281,7 +268,16 @@ namespace Foosball.UI
             });
         }
 
-
+        private void PlayFile(string file)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                this.mediaPlayer.Stop();
+                this.mediaPlayer = new MediaPlayer();
+                this.mediaPlayer.Open(new Uri(Path.Combine(Directory.GetCurrentDirectory(), "Resources", file)));
+                this.mediaPlayer.Play();
+            });
+        }
 
         private void ChangeBgColor()
         {

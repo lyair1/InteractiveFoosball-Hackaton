@@ -9,3 +9,5 @@ Foos-Python/.idea/
 *.txt
 Foos-Python/ball-tracking/ball-tracking/Output/
 Foos-Python/ball-tracking/ball-tracking/debug
+GUI/Foosball.UI/Foosball.UI/bin/
+GUI/Foosball.UI/Foosball.UI/obj/
