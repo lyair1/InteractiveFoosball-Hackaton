@@ -10,7 +10,7 @@ class GuiHttpClient(object):
 			
 def main():
 	x = GuiHttpClient()
-	x.SendHttp("Goal","red")
+	x.SendHttp("NewGame","blue")
 	
 
 if __name__ == "__main__":

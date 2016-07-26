@@ -9,14 +9,14 @@ namespace Foosball.UI
 
     public class HttpCommandsManager : IDisposable
     {
-        private readonly Dictionary<string, HttpEvent> onGoalEvent;
+        private readonly Dictionary<string, HttpEvent> events;
         private readonly HttpListener listener;
 
         private readonly List<string> prefixes = new List<string> { "http://localhost/foosballApi/" };
 
-        public HttpCommandsManager(Dictionary<string, HttpEvent> onGoalEvent)
+        public HttpCommandsManager(Dictionary<string, HttpEvent> events)
         {
-            this.onGoalEvent = onGoalEvent;
+            this.events = events;
             this.listener = new HttpListener();
             foreach (string prefix in this.prefixes)
             {
@@ -39,11 +39,19 @@ namespace Foosball.UI
                     HttpListenerContext context = this.listener.GetContext();
                     try
                     {
-                        string[] payload = new StreamReader(context.Request.InputStream).ReadToEnd().Split('*');
-                        Team team = (Team) Enum.Parse(typeof (Team), payload[1], true);
+                        string rawPayload = new StreamReader(context.Request.InputStream).ReadToEnd();
+                        if (rawPayload.StartsWith("Possession"))
+                        {
+                            string[] payload = rawPayload.Split('*');
+                        }
+                        else // Regular commands
+                        {
+                            string[] payload = rawPayload.Split('*');
+                            Team team = (Team)Enum.Parse(typeof(Team), payload[1], true);
 
-                        // Handle command asynchronously
-                        Task.Run(() => this.onGoalEvent[payload[0]](team));
+                            // Handle command asynchronously
+                            Task.Run(() => this.events[payload[0]](team));
+                        }
 
                         // Return OK response
                         context.Response.StatusCode = 200;

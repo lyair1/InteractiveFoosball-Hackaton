@@ -8,8 +8,20 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("goal-brazil.mp3")]
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("goal-meir.mp3")]
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("open.mp3")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/best100goalscutnosound.mp4")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/fireball.gif")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/airhorn.mp3")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/ballingoal.jpg")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/goal-brazil.mp3")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/goal-meir.mp3")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/goal.gif")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/goal_zoomout.gif")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/miss.mp3")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/newgame.mp3")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/soccerballgoal.gif")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/soccerballmiss.gif")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/startgame.mp3")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/win.gif")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/win.mp3")]
 
 
