@@ -97,7 +97,8 @@ class Algorithm:
 		debugPrint("End HandleOOF")
 		
 	def HandleDangerZone(self, point):
-		if (self.noneCount == self.NoneCountTH and self.isNone(point)):
+		goal = False
+		if (self.noneCount == self.NoneCountTH):
 			if (self.state == STATE.DANGER_ZONE_RED):
 				self.httpClient.SendEvent(EVENT.Goal, 'Blue')
 				self.inGoalZone = False
@@ -107,9 +108,11 @@ class Algorithm:
 				self.inGoalZone = False
 				self.debugFile.write("Red Goal\n")
 			self.state = STATE.OOF
+			goal = True
 		if not(self.inRedDangerZone(point) or self.inBlueDangerZone(point) or self.isNone(point)):
 			self.state = STATE.IN_PLAY
 		debugPrint("End HandleDangerZone")
+		return goal
 
 	def HandleInPlay(self, point):
 		if (self.inRedDangerZone(point)):
@@ -169,6 +172,7 @@ class Algorithm:
 		debugPrint("End main")
 		
 	def AddPoints(self, pointsArray):
+		goal = False
 		for point in pointsArray :
 			lastState = self.state
 			self.pointsCount += 1 
@@ -190,7 +194,7 @@ class Algorithm:
 			if (self.state == STATE.IN_PLAY):
 				self.HandleInPlay(point)
 			if (self.state == STATE.DANGER_ZONE_RED or self.state == STATE.DANGER_ZONE_BLUE):
-				self.HandleDangerZone(point)
+				goal = self.HandleDangerZone(point)
 			if (self.state == STATE.OOF):
 				self.HandleOOF(point)
 
@@ -199,13 +203,15 @@ class Algorithm:
 			if lastState != self.state :
 				self.debugFile.write("state changed to: " + str(self.state) + "\n")
 				debugPrint("state changed to: " + str(self.state))
+
+			return goal
 		
 class EventHook(object):
 	def __init__(self):
 		self._Algo = Algorithm()
 
 	def fire(self, *array):
-		self._Algo.AddPoints(*array)
+		return self._Algo.AddPoints(*array)
 
 def main():
 	y = EventHook()
