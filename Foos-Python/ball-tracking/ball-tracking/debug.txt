@@ -1,0 +1,13 @@
+entered goal zonePoint: 174,639
+Point: 172,639
+Point: 172,639
+Point: 172,639
+Point: 172,639
+Point: 172,639
+Point: 172,639
+Point: 172,639
+Point: 172,639
+Point: 172,639
+Point: 172,639
+Point: -1,-1
+leaved goal zone

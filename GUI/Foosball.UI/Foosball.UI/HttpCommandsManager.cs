@@ -4,6 +4,7 @@ namespace Foosball.UI
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Net;
     using System.Threading.Tasks;
 
@@ -15,7 +16,7 @@ namespace Foosball.UI
         private readonly List<string> prefixes = new List<string> { "http://localhost/foosballApi/" };
         private HttpData possessionEvent;
 
-        public HttpCommandsManager(HttpData possessionEvent, Dictionary<string, HttpEvent> events)
+        public HttpCommandsManager(HttpData possessionEvent, HttpMatrix onHotspotEvent, Dictionary<string, HttpEvent> events)
         {
             this.possessionEvent = possessionEvent;
             this.events = events;
@@ -45,15 +46,23 @@ namespace Foosball.UI
                         if (rawPayload.StartsWith("Possession"))
                         {
                             string[] payload = rawPayload.Split('*');
-                            possessionEvent(new[] 
+                            this.possessionEvent(new[] 
                             {
                                 long.Parse(payload[1]),
                                 long.Parse(payload[2]),
                                 long.Parse(payload[3]),
                             });
                         }
-                        if(rawPayload.StartsWith("HotSpots"))
+                        else if(rawPayload.StartsWith("HotSpots"))
                         {
+                            var seperators = new List<string>() {"],"};
+                            var rows = rawPayload.Split('*')[1].Split(seperators.ToArray(), StringSplitOptions.None);
+                            List<List<string>> hotSpotMatrix = new List<List<string>>();
+                            foreach (string row in rows)
+                            {
+                                hotSpotMatrix.Add(row.Replace("[", "").Replace("]", "").Split(',').Select(s => s.Trim()).ToList());
+                            }
+
 
                         }
                         else // Regular commands

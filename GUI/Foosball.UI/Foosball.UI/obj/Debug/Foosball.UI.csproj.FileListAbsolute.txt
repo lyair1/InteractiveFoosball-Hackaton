@@ -66,3 +66,10 @@ C:\Users\yairle\Hackaton\Repo\InteractiveFoosball-Hackaton\GUI\Foosball.UI\Foosb
 C:\Users\yairle\Hackaton\Repo\InteractiveFoosball-Hackaton\GUI\Foosball.UI\Foosball.UI\obj\Debug\Foosball.UI.csproj.GenerateResource.Cache
 C:\Users\yairle\Hackaton\Repo\InteractiveFoosball-Hackaton\GUI\Foosball.UI\Foosball.UI\obj\Debug\Foosball.UI.exe
 C:\Users\yairle\Hackaton\Repo\InteractiveFoosball-Hackaton\GUI\Foosball.UI\Foosball.UI\obj\Debug\Foosball.UI.pdb
+C:\Users\moshec\Documents\InteractiveFoosball-Hackaton\GUI\Foosball.UI\Foosball.UI\bin\Debug\Resources\BrazilGolaso1.mp3
+C:\Users\moshec\Documents\InteractiveFoosball-Hackaton\GUI\Foosball.UI\Foosball.UI\bin\Debug\Resources\Buz.mp3
+C:\Users\moshec\Documents\InteractiveFoosball-Hackaton\GUI\Foosball.UI\Foosball.UI\bin\Debug\Resources\fans2.mp3
+C:\Users\moshec\Documents\InteractiveFoosball-Hackaton\GUI\Foosball.UI\Foosball.UI\bin\Debug\Resources\miss2.mp3
+C:\Users\moshec\Documents\InteractiveFoosball-Hackaton\GUI\Foosball.UI\Foosball.UI\bin\Debug\Resources\SpanishGoal1.mp3
+C:\Users\moshec\Documents\InteractiveFoosball-Hackaton\GUI\Foosball.UI\Foosball.UI\bin\Debug\Resources\SpanishGoal2.mp3
+C:\Users\moshec\Documents\InteractiveFoosball-Hackaton\GUI\Foosball.UI\Foosball.UI\bin\Debug\Resources\SpanishGoal3.mp3

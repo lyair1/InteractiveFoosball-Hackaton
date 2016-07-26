@@ -39,7 +39,7 @@ class GuiHttpClient(object):
 		debugPrint("End SendPossessions")
 
 	def sendHotSpots(self, possessionMatrix):
-		r = requests.post('http://localhost/foosballApi/', data = "HotSpots" + '*' + possessionMatrix)
+		r = requests.post('http://localhost/foosballApi/', data = "HotSpots" + '*' + str(possessionMatrix))
 		if(r.status_code != requests.codes.ok):
 			r.raise_for_status()
 		debugPrint("HotSpots" + '*' + str(possessionMatrix[0][0]))
@@ -129,7 +129,7 @@ class Algorithm:
 
 		sumPossession = self.redDangerZoneCount + self.blueDangerZoneCount + self.centerZoneCount
 		if(sumPossession % 10 == 1):
-			self.httpClient.SendPossession(self.blueDangerZoneCount/float(sumPossession), self.centerZoneCount/float(sumPossession), self.redDangerZoneCount/float(sumPossession))
+			self.httpClient.SendPossession(self.blueDangerZoneCount, self.centerZoneCount, self.redDangerZoneCount)
 			
 		if(sumPossession % 500 == 0):
 			self.httpClient.sendHotSpots(self.possessionMatrix)
@@ -141,15 +141,15 @@ class Algorithm:
 				self.inGoalZone = False
 				self.debugFile.write("leaved goal zone")
 				if(self.enteredGoalZonePoint + self.MissPointCountTH >= self.pointsCount):
-					self.httpClient.SendEvent(EVENT.Miss, attacker)
+					self.httpClient.SendEvent(EVENT.Miss, self.attacker)
 					self.debugFile.write("Sending MISS")
 		else:
 			if(self.inBlueGoalZone(point) or self.inRedGoalZone(point)):
 				self.inGoalZone = True
 				if self.inBlueGoalZone:
-					attacker = 'Red'
+					self.attacker = 'Red'
 				else:
-					attacker = 'Blue'
+					self.attacker = 'Blue'
 				self.debugFile.write("entered goal zone")
 				self.enteredGoalZonePoint = self.pointsCount
 

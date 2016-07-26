@@ -5,6 +5,7 @@ namespace Foosball.UI
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.IO;
+    using System.Linq;
     using System.Reflection;
     using System.Threading;
     using System.Threading.Tasks;
@@ -20,6 +21,7 @@ namespace Foosball.UI
 
     public delegate void HttpEvent(Team team);
     public delegate void HttpData(long[] data);
+    public delegate void HttpMatrix(List<List<int>> hotspots);
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -41,6 +43,7 @@ namespace Foosball.UI
 
         long[] possession = new long[3];
         private Dictionary<Team, int> attempts = new Dictionary<Team, int> {{Team.Blue, 0}, {Team.Red, 0}};
+        private int[][] hotspots = new int[20][];
 
         private bool isGameOn = false;
         private bool isFirstStart = true;
@@ -57,6 +60,7 @@ namespace Foosball.UI
         public event HttpEvent StatusEvent;
 
         public event HttpData PossessionEvent;
+        public event HttpMatrix HotspotEvent;
 
         public MainWindow()
         {
@@ -70,11 +74,12 @@ namespace Foosball.UI
             StatusEvent += OnStatusEvent;
 
             PossessionEvent += OnPossession;
+            HotspotEvent += OnHotspotEvent;
 
             this.mediaPlayer = new MediaPlayer();
             
             // Send the event to the HTTP manager so it can be invoked by need
-            this.httpManager = new HttpCommandsManager(PossessionEvent, 
+            this.httpManager = new HttpCommandsManager(PossessionEvent, HotspotEvent,
             new Dictionary<string, HttpEvent>
             {
                 {"NewGame", NewGame},
@@ -83,6 +88,29 @@ namespace Foosball.UI
                 {"Miss", MissEvent},
                 {"Status", StatusEvent}
             });
+        }
+
+        private void OnHotspotEvent(List<List<int>> data)
+        {
+            if (!this.hotspots[0].Any())
+            {
+                for (int i = 0; i < 20; i++)
+                {
+                    this.hotspots[i] = new int[10];
+                    for (int j = 0; j < data[0].Count; j++)
+                    {
+                        this.hotspots[i][j] = 0;
+                    }
+                }
+            }
+
+            for (int i = 0; i < data.Count; i++)
+            {
+                for (int j = 0; j < data[0].Count; j++)
+                {
+                    this.hotspots[i][j] += data[i][j];
+                }
+            }
         }
 
         void OnPossession(long[] data)
@@ -97,6 +125,7 @@ namespace Foosball.UI
         {
             this.possession = new long[3];
             this.attempts = new Dictionary<Team, int> { { Team.Blue, 0 }, { Team.Red, 0 } };
+            this.hotspots = new int[20][]; 
 
             this.redScore = 0;
             this.blueScore = 0;
@@ -281,7 +310,7 @@ namespace Foosball.UI
 
             Task.Factory.StartNew(() =>
             {
-                Task.Delay(10000).Wait();
+                Task.Delay(5000).Wait();
                 Dispatcher.Invoke(() =>
                 {
                     this.DockPanel.Children.Clear();
