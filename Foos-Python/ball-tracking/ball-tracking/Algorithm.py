@@ -23,9 +23,9 @@ class GuiHttpClient(object):
 			event = "Start"
 		if(action == 2):
 			event = "Miss"
-		# r = requests.post('http://localhost/foosballApi/', data = event + '*' + team)
-		# if(r.status_code != requests.codes.ok):
-			# r.raise_for_status()
+		r = requests.post('http://localhost/foosballApi/', data = event + '*' + team)
+		if(r.status_code != requests.codes.ok):
+			r.raise_for_status()
 		debugPrint("event + '*' + team")
 
 		debugPrint("Send event")
