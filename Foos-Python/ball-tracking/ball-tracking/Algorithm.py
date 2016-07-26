@@ -30,14 +30,18 @@ class GuiHttpClient(object):
 
 
 class Algorithm:
-	Length = 5
-	Width = 3
 	NoneCountTH = 35
 	Length = 2000
 	Width = 1000
+	
 	NoneCountTH = 20
-	possesionMatrix = []
+	MissPointCountTH = 15
+	inGoalZone = False
+	enteredGoalZonePoint = -50
+	
+	possessionMatrix = []
 	noneCount = 0
+	pointsCount = 0
 	httpClient = GuiHttpClient()
 	redDangerZoneCount = 0
 	blueDangerZoneCount = 0
@@ -61,7 +65,13 @@ class Algorithm:
 		
 	def inBlueDangerZone(self, point):
 		return self.inArea(point, 1300, 2000, 200, 800)
-	
+		
+	def inRedGoalZone(self, point):
+		return self.inArea(point, 0, 200, 250, 750)
+		
+	def inBlueGoalZone(self, point):
+		return self.inArea(point, 1800, 2000, 250, 750)
+
 	def HandleOOF(self, point):
 		if (self.inCenter(point)):
 			self.state = STATE.IN_PLAY
@@ -97,15 +107,36 @@ class Algorithm:
 		elif(self.inCenter(point)):
 			self.centerZoneCount+=1
 		
-		# sumPossession = self.redDangerZoneCount + self.blueDangerZoneCount + self.centerZoneCount
-		# if(sumPossession % 10 ==0):
-		# 	self.httpClient.SendEvent(EVENT.POSSESSION, self.blueDangerZoneCount/float(sumPossession), self.centerZoneCount/float(sumPossession), self.redDangerZoneCount/float(sumPossession))
+		sumPossession = self.redDangerZoneCount + self.blueDangerZoneCount + self.centerZoneCount
+		if(sumPossession % 10 == 0):
+			self.httpClient.SendEvent(EVENT.POSSESSION, self.blueDangerZoneCount/float(sumPossession), self.centerZoneCount/float(sumPossession), self.redDangerZoneCount/float(sumPossession))
+			
+		if(sumPossession % 500 == 0):
+			self.httpClient.sendEvent(EVENT.HOTSPOTS, self.possesionMatrix)
+			
+	# handling miss by detecting ball entering and leaving goal zone
+	def HandleMiss(self, point):
+		if(inGoalZone):
+			if((not inBlueGoalZone(point)) and not (inRedGoalZone(point))):
+				self.inGoalZone = False
+				if(self.enteredGoalZonePoint + MissPointCountTH >= self.pointsCount):
+					self.httpClient.SendEvent(EVENT.MISS, 'MISS')
+		else:
+			if(inBlueGoalZone(point) or inRedGoalZone(point)):
+				self.inGoalZone = True
+				self.enteredGoalZonePoint = self.pointsCount
 
 			
 	def __init__(self):
 		self.state = STATE.OOF
 		self.redDangerZoneCount = 0
 		self.blueDangerZoneCount = 0
+		
+		for i in range(self.Width / 100):
+			self.possesionMatrix.append([])
+			for j in range(self.Length / 100):
+				self.possesionMatrix[i].append(0)
+
 
 		self.debugFile = open("debug", "w")
 		debugPrint("End main")
@@ -113,12 +144,15 @@ class Algorithm:
 	def AddPoints(self, pointsArray):
 		for point in pointsArray :
 			lastState = self.state
+			pointsCount += 1 
 			self.IncreasePossession(point)
+			self.HandleMiss(Point)
 			#############################################################
 
 			if (point[0] == -1 and point[1] == -1):
 				self.noneCount += 1
 			else:
+				possessionMatrix[point[0]/100][point[1]/100] += 1
 				if self.noneCount > 4 and self.noise < 10 :
 					self.noise+=1
 				else:
