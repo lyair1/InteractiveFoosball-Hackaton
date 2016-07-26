@@ -6,7 +6,7 @@ def enum(**enums):
     return type('Enum', (), enums)
 	
 STATE = enum(IN_PLAY=0, DANGER_ZONE_RED=1, DANGER_ZONE_BLUE=2, OOF=3)
-EVENT = enum(GOAL=0, START=1)
+EVENT = enum(GOAL=0, START=1, MISS=2)
 
 __DEBUG_PRINT__ = True
 def debugPrint(txt):
@@ -20,14 +20,16 @@ class GuiHttpClient(object):
 		# 	r.raise_for_status()
 		debugPrint("Send event")
 
-	def SendStats(self, redTeamAttacks, blueTeamAttacks):
-		debugPrint("End SendStats")
+	def SendPossession(self, blue, center, red):
+		debugPrint("End SendPossessions")
 
+	def sendHotSpots(self, possessionMatrix):
+		debugPrint("End SendHotSpot")
 
 class Algorithm:
 	NoneCountTH = 35
-	Length = 2000
-	Width = 1000
+	Length = 1000
+	Width = 2000
 	
 	NoneCountTH = 20
 	MissPointCountTH = 15
@@ -103,22 +105,25 @@ class Algorithm:
 			self.centerZoneCount+=1
 		
 		sumPossession = self.redDangerZoneCount + self.blueDangerZoneCount + self.centerZoneCount
-		if(sumPossession % 10 == 0):
-			self.httpClient.SendEvent(EVENT.POSSESSION, self.blueDangerZoneCount/float(sumPossession), self.centerZoneCount/float(sumPossession), self.redDangerZoneCount/float(sumPossession))
+		if(sumPossession % 10 == 1):
+			self.httpClient.SendPossession(self.blueDangerZoneCount/float(sumPossession), self.centerZoneCount/float(sumPossession), self.redDangerZoneCount/float(sumPossession))
 			
 		if(sumPossession % 500 == 0):
-			self.httpClient.sendEvent(EVENT.HOTSPOTS, self.possesionMatrix)
+			self.httpClient.sendHotSpots(self.possessionMatrix)
 			
 	# handling miss by detecting ball entering and leaving goal zone
 	def HandleMiss(self, point):
-		if(inGoalZone):
-			if((not inBlueGoalZone(point)) and not (inRedGoalZone(point))):
+		if(self.inGoalZone):
+			if((not inBlueGoalZone(point)) and not (inRedGoalZone(point)) and not(self.isNone(point))):
 				self.inGoalZone = False
+				self.debugFile.write("leaved goal zone")
 				if(self.enteredGoalZonePoint + MissPointCountTH >= self.pointsCount):
-					self.httpClient.SendEvent(EVENT.MISS, 'MISS')
+					self.httpClient.SendEvent(EVENT.MISS, '')
+					self.debugFile.write("Sending MISS")
 		else:
-			if(inBlueGoalZone(point) or inRedGoalZone(point)):
+			if(self.inBlueGoalZone(point) or self.inRedGoalZone(point)):
 				self.inGoalZone = True
+				self.debugFile.write("wntered goal zone")
 				self.enteredGoalZonePoint = self.pointsCount
 				
 
@@ -129,9 +134,9 @@ class Algorithm:
 		self.blueDangerZoneCount = 0
 		
 		for i in range(self.Width / 100):
-			self.possesionMatrix.append([])
+			self.possessionMatrix.append([])
 			for j in range(self.Length / 100):
-				self.possesionMatrix[i].append(0)
+				self.possessionMatrix[i].append(0)
 
 
 		self.debugFile = open("debug", "w")
@@ -140,15 +145,15 @@ class Algorithm:
 	def AddPoints(self, pointsArray):
 		for point in pointsArray :
 			lastState = self.state
-			pointsCount += 1 
+			self.pointsCount += 1 
 			self.IncreasePossession(point)
-			self.HandleMiss(Point)
+			self.HandleMiss(point)
 			#############################################################
 
 			if (point[0] == -1 and point[1] == -1):
 				self.noneCount += 1
 			else:
-				possessionMatrix[point[0]/100][point[1]/100] += 1
+				self.possessionMatrix[point[0]/100][point[1]/100] += 1
 				if self.noneCount > 4 and self.noise < 10 :
 					self.noise+=1
 				else:
@@ -165,8 +170,9 @@ class Algorithm:
 
 			self.debugFile.write("Point: " + str(point[0]) + "," + str(point[1]) + "\n")
 			debugPrint("Point: " + str(point[0]) + "," + str(point[1]))
-			self.debugFile.write("state: " + str(self.state) + "\n")
-			debugPrint("state: " + str(self.state))
+			if lastState != self.state :
+				self.debugFile.write("state changed to: " + str(self.state) + "\n")
+				debugPrint("state changed to: " + str(self.state))
 		
 class EventHook(object):
 	def __init__(self):
@@ -177,7 +183,7 @@ class EventHook(object):
 
 def main():
 	x = EventHook()
-	x.fire([[1,2], [999, 1999]])
+	x.fire([[1000,900]])
 	
 
 if __name__ == "__main__":
