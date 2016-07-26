@@ -25,14 +25,14 @@ class GuiHttpClient(object):
 
 
 class Algorithm:
-	Length = 5
-	Width = 3
+	Length = 2000
+	Width = 1000
 	NoneCountTH = 20
-	possesionMatrix = []
 	noneCount = 0
 	httpClient = GuiHttpClient()
 	redDangerZoneCount = 0
 	blueDangerZoneCount = 0
+	centerZoneCount = 0
 	noise = 0
 
 	def inArea(self, point, lowX, highX, lowY, highY):
@@ -76,20 +76,27 @@ class Algorithm:
 	def HandleInPlay(self, point):
 		if (self.inRedDangerZone(point)):
 			self.state = STATE.DANGER_ZONE_RED
-			self.redDangerZoneCount+=1
 		if (self.inBlueDangerZone(point)):
 			self.state = STATE.DANGER_ZONE_BLUE
+		debugPrint("End HandleInPlay")	
+		
+	def IncreasePossesion(self, point):
+		if (self.inRedDangerZone(point)):
+			self.redDangerZoneCount+=1
+		else if (self.inBlueDangerZone(point)):
 			self.blueDangerZoneCount+=1
-		debugPrint("End HandleDangerZone")	
+		else if(self.inCenter(point)):
+			self.centerZoneCount+=1
+		
+		sumPossesion = self.redDangerZoneCount + self.blueDangerZoneCount + self.centerZoneCount
+		if(sumPossesion % 10 ==0):
+			self.httpClient.SendEvent(EVENT.POSSESION, self.blueDangerZoneCount/float(sumPossesion), self.centerZoneCount/float(sumPossesion), self.redDangerZoneCount/float(sumPossesion))
 
+			
 	def __init__(self):
 		self.state = STATE.OOF
 		self.redDangerZoneCount = 0
 		self.blueDangerZoneCount = 0
-		for i in range(self.Width):
-			self.possesionMatrix.append([])
-			for j in range(self.Length):
-				self.possesionMatrix[i].append(0)
 
 		self.debugFile = open("debug", "w")
 		debugPrint("End main")
@@ -97,7 +104,7 @@ class Algorithm:
 	def AddPoints(self, pointsArray):
 		for point in pointsArray :
 			lastState = self.state
-
+			self.IncreasePossesion(point)
 			#############################################################
 
 			if (point[0] == -1 and point[1] == -1):
