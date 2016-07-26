@@ -25,9 +25,13 @@ class GuiHttpClient(object):
 
 
 class Algorithm:
+	Length = 5
+	Width = 3
+	NoneCountTH = 35
 	Length = 2000
 	Width = 1000
 	NoneCountTH = 20
+	possesionMatrix = []
 	noneCount = 0
 	httpClient = GuiHttpClient()
 	redDangerZoneCount = 0
