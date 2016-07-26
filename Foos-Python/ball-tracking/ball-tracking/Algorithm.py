@@ -99,10 +99,10 @@ class Algorithm:
 	def HandleDangerZone(self, point):
 		if (self.noneCount == self.NoneCountTH):
 			if (self.state == STATE.DANGER_ZONE_RED):
-				self.httpClient.SendEvent(EVENT.Goal, 'BLUE')
+				self.httpClient.SendEvent(EVENT.Goal, 'Blue')
 				self.debugFile.write("Blue Goal\n")
 			else:
-				self.httpClient.SendEvent(EVENT.Goal, 'RED')
+				self.httpClient.SendEvent(EVENT.Goal, 'Red')
 				self.debugFile.write("Red Goal\n")
 			self.state = STATE.OOF
 		if not(self.inRedDangerZone(point) or self.inBlueDangerZone(point) or self.isNone(point)):
@@ -124,6 +124,7 @@ class Algorithm:
 		elif(self.inCenter(point)):
 			self.centerZoneCount+=1
 		
+
 		sumPossession = self.redDangerZoneCount + self.blueDangerZoneCount + self.centerZoneCount
 		if(sumPossession % 10 == 1):
 			self.httpClient.SendPossession(self.blueDangerZoneCount/float(sumPossession), self.centerZoneCount/float(sumPossession), self.redDangerZoneCount/float(sumPossession))

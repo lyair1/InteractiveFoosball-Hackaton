@@ -9,6 +9,10 @@
 //------------------------------------------------------------------------------
 
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/best100goalscutnosound.mp4")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/fire1.gif")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/fire2.gif")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/fire3.gif")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/fire4.gif")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/fireball.gif")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/airhorn.mp3")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/ballingoal.jpg")]
@@ -21,6 +25,7 @@
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/soccerballgoal.gif")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/soccerballmiss.gif")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/startgame.mp3")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/table.jpg")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/win.gif")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/win.mp3")]
 

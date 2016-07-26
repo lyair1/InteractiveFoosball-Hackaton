@@ -28,6 +28,8 @@ namespace Foosball.UI
         private int redScore = 0;
         private int blueScore = 0;
 
+        private MediaPlayer mediaPlayer;
+
         private readonly HttpCommandsManager httpManager;
 
         // Define event
@@ -47,7 +49,8 @@ namespace Foosball.UI
             GoalEvent += OnGoalEvent;
             MissEvent += OnMissEvent;
             StatusEvent += OnStatusEvent;
-                    
+
+            this.mediaPlayer = new MediaPlayer();
             
             // Send the event to the HTTP manager so it can be invoked by need
             this.httpManager = new HttpCommandsManager(new Dictionary<string, HttpEvent>
@@ -60,15 +63,24 @@ namespace Foosball.UI
             });
         }
 
+        private void PlayFile(string file)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                this.mediaPlayer.Stop();
+                this.mediaPlayer = new MediaPlayer();
+                this.mediaPlayer.Open(new Uri(Path.Combine(Directory.GetCurrentDirectory(), "Resources", file)));
+                this.mediaPlayer.Play();
+            });
+        }
+
         private void OnNewGame(Team team)
         {
             this.redScore = 0;
             this.blueScore = 0;
             UpdateScoreBoard();
 
-            MediaPlayer mediaPlayer = new MediaPlayer();
-            mediaPlayer.Open(new Uri(Path.Combine(Directory.GetCurrentDirectory(), "Resources", "NewGame.mp3")));
-            mediaPlayer.Play();
+            PlayFile("NewGame.mp3");
 
             Dispatcher.Invoke(() =>
             {
@@ -90,9 +102,7 @@ namespace Foosball.UI
 
         private void OnStartEvent(Team team)
         {
-            MediaPlayer mediaPlayer = new MediaPlayer();
-            mediaPlayer.Open(new Uri(Path.Combine(Directory.GetCurrentDirectory(), "Resources", "StartGame.mp3")));
-            mediaPlayer.Play();
+            PlayFile("StartGame.mp3");
         }
 
         private void OnGoalEvent(Team team)
@@ -108,9 +118,9 @@ namespace Foosball.UI
                 UpdateScoreBoard();
             }
 
-            if (this.redScore == 2 || this.blueScore == 2)
+            if (this.redScore == 5 || this.blueScore == 5)
             {
-                Win();
+                Win(this.redScore > this.blueScore ? Colors.Red : Colors.Blue);
                 return;
             }
 
@@ -119,6 +129,7 @@ namespace Foosball.UI
                 Dispatcher.Invoke(() =>
                 {
                     this.DockPanel.Children.Clear();
+                    this.DockPanel.Background = new SolidColorBrush(Colors.Blue);
                     this.DockPanel.Children.Add(new MediaElement
                     {
                         Height = 550,
@@ -138,7 +149,11 @@ namespace Foosball.UI
                 Task.Factory.StartNew(() =>
                 {
                     Task.Delay(13000).Wait();
-                    Dispatcher.Invoke(() => { this.DockPanel.Children.Clear(); });
+                    Dispatcher.Invoke(() =>
+                    {
+                        this.DockPanel.Background = new SolidColorBrush(Colors.Transparent);
+                        this.DockPanel.Children.Clear();
+                    });
                 });
             }
             else // RED
@@ -146,6 +161,7 @@ namespace Foosball.UI
                 Dispatcher.Invoke(() =>
                 {
                     this.DockPanel.Children.Clear();
+                    this.DockPanel.Background = new SolidColorBrush(Colors.Red);
                     this.DockPanel.Children.Add(new MediaElement
                     {
                         Height = 900,
@@ -165,16 +181,18 @@ namespace Foosball.UI
                 Task.Factory.StartNew(() =>
                 {
                     Task.Delay(7000).Wait();
-                    Dispatcher.Invoke(() => { this.DockPanel.Children.Clear(); });
+                    Dispatcher.Invoke(() =>
+                    {
+                        this.DockPanel.Background = new SolidColorBrush(Colors.Transparent);
+                        this.DockPanel.Children.Clear();
+                    });
                 });
             }
 
-            MediaPlayer mediaPlayer = new MediaPlayer();
-            mediaPlayer.Open(new Uri(Path.Combine(Directory.GetCurrentDirectory(), "Resources", team == Team.Blue ? @"Goal-Brazil.mp3" : @"Goal-Meir.mp3")));
-            mediaPlayer.Play();
+            PlayFile(team == Team.Blue ? @"Goal-Brazil.mp3" : @"Goal-Meir.mp3");
         }
 
-        private void Win()
+        private void Win(Color winnerColor)
         {
             if (this.blueScore == 10)
             {
@@ -184,24 +202,45 @@ namespace Foosball.UI
             Dispatcher.Invoke(() =>
             {
                 this.DockPanel.Children.Clear();
+                this.DockPanel.Background = new SolidColorBrush(winnerColor);
+                this.DockPanel.Orientation = Orientation.Horizontal;
                 this.DockPanel.Children.Add(new MediaElement
                 {
-                    Height = 700,
-                    Width = 700,
-                    Source = new Uri(Path.Combine(Directory.GetCurrentDirectory(), "Resources", "Win.gif")),
-                    Margin = new Thickness(0, 0, 0, 0)
+                    Height = 600,
+                    Width = 600,
+                    Source = new Uri(Path.Combine(Directory.GetCurrentDirectory(), "Resources", "fire1.gif")),
+                    Margin = new Thickness(30, -600, 0, 0)
+                });
+                this.DockPanel.Children.Add(new MediaElement
+                {
+                    Height = 600,
+                    Width = 600,
+                    Source = new Uri(Path.Combine(Directory.GetCurrentDirectory(), "Resources", "fire2.gif")),
+                    Margin = new Thickness(30, 300, 0, 0)
+                });
+                this.DockPanel.Children.Add(new MediaElement
+                {
+                    Height = 600,
+                    Width = 600,
+                    Source = new Uri(Path.Combine(Directory.GetCurrentDirectory(), "Resources", "fire4.gif")),
+                    Margin = new Thickness(30, -600, 0, 0)
+                });
+                this.DockPanel.Children.Add(new MediaElement
+                {
+                    Height = 600,
+                    Width = 600,
+                    Source = new Uri(Path.Combine(Directory.GetCurrentDirectory(), "Resources", "fire3.gif")),
+                    Margin = new Thickness(30, 100, 0, 0)
                 });
             });
 
             Task.Factory.StartNew(() =>
             {
-                Task.Delay(34000).Wait();
+                Task.Delay(50000).Wait();
                 Dispatcher.Invoke(() => { this.DockPanel.Children.Clear(); });
             });
 
-            MediaPlayer mediaPlayer = new MediaPlayer();
-            mediaPlayer.Open(new Uri(Path.Combine(Directory.GetCurrentDirectory(), "Resources", "Win.mp3")));
-            mediaPlayer.Play();
+            PlayFile("Win.mp3");
         }
 
         private void OnMissEvent(Team team)
@@ -217,9 +256,7 @@ namespace Foosball.UI
                 });
             });
 
-            MediaPlayer mediaPlayer = new MediaPlayer();
-            mediaPlayer.Open(new Uri(Path.Combine(Directory.GetCurrentDirectory(), "Resources", "Miss.mp3")));
-            mediaPlayer.Play();
+            PlayFile("Miss.mp3");
 
             Task.Factory.StartNew(() =>
             {
