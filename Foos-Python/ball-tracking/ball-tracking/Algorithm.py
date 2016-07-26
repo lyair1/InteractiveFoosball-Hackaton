@@ -27,7 +27,7 @@ class GuiHttpClient(object):
 class Algorithm:
 	Length = 5
 	Width = 3
-	NoneCountTH = 20
+	NoneCountTH = 35
 	possesionMatrix = []
 	noneCount = 0
 	httpClient = GuiHttpClient()
