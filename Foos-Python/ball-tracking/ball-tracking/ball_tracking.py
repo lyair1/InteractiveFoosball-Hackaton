@@ -18,6 +18,17 @@ __ENABLE_VIDEO_OUT__ = False
 __DEBUG_PRINT__ = False
 __PRINT_VECTOR_TO_FILE = True
 
+replayFrames = []
+
+def saveGoalVideo():
+	_outStream = cv2.VideoWriter('Output/output_Goal.avi', -1, 20.0, (1000,700))
+
+def addReplayFrame(_frame):
+	if len(replayFrames) >= 30*4:
+		replayFrames.pop(0)
+	else:
+		replayFrames.append(_frame)
+
 def getBallColor():
 	lower = (0, 0, 145)
 	upper = (179, 100, 255)
@@ -143,6 +154,9 @@ def main():
 		
 		if __ENABLE_VIDEO_OUT__:
 			outStream.write(frame)
+
+		# add replay frame
+		addReplayFrame(frame)
 		
 		key = cv2.waitKey(1) & 0xFF
 
@@ -151,7 +165,8 @@ def main():
 			break
 
 		if center is None:
-			eventHook.fire([(-1,-1)])
+			if eventHook.fire([(-1,-1)]):
+				saveGoalVideo()
 		else:
 			normalizePoint = (int(2000*float(center[0]/1000.0)),int(1000*float(center[1]/705.0)))
 			eventHook.fire([normalizePoint])
@@ -164,7 +179,6 @@ def main():
 	raise SystemExit
 	if __ENABLE_VIDEO_OUT__:
 		outStream.release()
-
 
 
 if __name__ == "__main__":
