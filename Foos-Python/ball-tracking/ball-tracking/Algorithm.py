@@ -80,7 +80,7 @@ class Algorithm:
 			self.state = STATE.DANGER_ZONE_BLUE
 		debugPrint("End HandleInPlay")	
 		
-	def IncreasePossesion(self, point):
+	def IncreasePossession(self, point):
 		if (self.inRedDangerZone(point)):
 			self.redDangerZoneCount+=1
 		else if (self.inBlueDangerZone(point)):
@@ -88,9 +88,9 @@ class Algorithm:
 		else if(self.inCenter(point)):
 			self.centerZoneCount+=1
 		
-		sumPossesion = self.redDangerZoneCount + self.blueDangerZoneCount + self.centerZoneCount
-		if(sumPossesion % 10 ==0):
-			self.httpClient.SendEvent(EVENT.POSSESION, self.blueDangerZoneCount/float(sumPossesion), self.centerZoneCount/float(sumPossesion), self.redDangerZoneCount/float(sumPossesion))
+		sumPossession = self.redDangerZoneCount + self.blueDangerZoneCount + self.centerZoneCount
+		if(sumPossession % 10 ==0):
+			self.httpClient.SendEvent(EVENT.POSSESSION, self.blueDangerZoneCount/float(sumPossession), self.centerZoneCount/float(sumPossession), self.redDangerZoneCount/float(sumPossession))
 
 			
 	def __init__(self):
@@ -104,7 +104,7 @@ class Algorithm:
 	def AddPoints(self, pointsArray):
 		for point in pointsArray :
 			lastState = self.state
-			self.IncreasePossesion(point)
+			self.IncreasePossession(point)
 			#############################################################
 
 			if (point[0] == -1 and point[1] == -1):
