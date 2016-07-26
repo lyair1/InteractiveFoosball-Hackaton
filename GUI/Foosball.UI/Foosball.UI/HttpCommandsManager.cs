@@ -13,9 +13,11 @@ namespace Foosball.UI
         private readonly HttpListener listener;
 
         private readonly List<string> prefixes = new List<string> { "http://localhost/foosballApi/" };
+        private HttpData possessionEvent;
 
-        public HttpCommandsManager(Dictionary<string, HttpEvent> events)
+        public HttpCommandsManager(HttpData possessionEvent, Dictionary<string, HttpEvent> events)
         {
+            this.possessionEvent = possessionEvent;
             this.events = events;
             this.listener = new HttpListener();
             foreach (string prefix in this.prefixes)
@@ -43,6 +45,16 @@ namespace Foosball.UI
                         if (rawPayload.StartsWith("Possession"))
                         {
                             string[] payload = rawPayload.Split('*');
+                            possessionEvent(new[] 
+                            {
+                                long.Parse(payload[1]),
+                                long.Parse(payload[2]),
+                                long.Parse(payload[3]),
+                            });
+                        }
+                        if(rawPayload.StartsWith("HotSpots"))
+                        {
+
                         }
                         else // Regular commands
                         {

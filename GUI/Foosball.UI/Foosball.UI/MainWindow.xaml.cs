@@ -19,6 +19,7 @@ namespace Foosball.UI
     }
 
     public delegate void HttpEvent(Team team);
+    public delegate void HttpData(long[] data);
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -27,6 +28,8 @@ namespace Foosball.UI
     {
         private int redScore = 0;
         private int blueScore = 0;
+
+        long[] possession = new long[3];
 
         private MediaPlayer mediaPlayer;
 
@@ -39,6 +42,8 @@ namespace Foosball.UI
         public event HttpEvent MissEvent;
         public event HttpEvent StatusEvent;
 
+        public event HttpData PossessionEvent;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -50,22 +55,34 @@ namespace Foosball.UI
             MissEvent += OnMissEvent;
             StatusEvent += OnStatusEvent;
 
+            PossessionEvent += OnPossession;
+
             this.mediaPlayer = new MediaPlayer();
             
             // Send the event to the HTTP manager so it can be invoked by need
-            this.httpManager = new HttpCommandsManager(new Dictionary<string, HttpEvent>
+            this.httpManager = new HttpCommandsManager(PossessionEvent, 
+            new Dictionary<string, HttpEvent>
             {
                 {"NewGame", NewGame},
                 {"Start", StartEvent},
                 {"Goal", GoalEvent},
                 {"Miss", MissEvent},
-                {"Status", StatusEvent},
+                {"Status", StatusEvent}
             });
         }
 
+        void OnPossession(long[] data)
+        {
+            for(int i=0; i<3; i++)
+            {
+                possession[i] += data[i];
+            }
+        }
 
         private void OnNewGame(Team team)
         {
+            possession = new long[3];
+
             this.redScore = 0;
             this.blueScore = 0;
             UpdateScoreBoard();
@@ -92,7 +109,7 @@ namespace Foosball.UI
 
         private void OnStartEvent(Team team)
         {
-            Dispatcher.Invoke(() => this.DockPanel.Children.Clear();)
+            Dispatcher.Invoke(() => this.DockPanel.Children.Clear());
             PlayFile("StartGame.mp3");
         }
 
