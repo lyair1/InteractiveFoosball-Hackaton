@@ -50,8 +50,6 @@ class Algorithm:
 	NoneCountTH = 35
 	Length = 1000
 	Width = 2000
-	
-	NoneCountTH = 20
 	MissPointCountTH = 15
 	inGoalZone = False
 	enteredGoalZonePoint = -50
@@ -84,25 +82,28 @@ class Algorithm:
 		return self.inArea(point, 1300, 2000, 200, 800)
 		
 	def inRedGoalZone(self, point):
-		return self.inArea(point, 0, 200, 250, 750)
+		return self.inArea(point, 0, 200, 350, 650)
 		
 	def inBlueGoalZone(self, point):
-		return self.inArea(point, 1800, 2000, 250, 750)
+		return self.inArea(point, 1800, 2000, 350, 650)
 
 	def HandleOOF(self, point):
 		if (self.inCenter(point)):
 			self.state = STATE.IN_PLAY
 			self.debugFile.write("Game Started \n")
+			self.inGoalZone = False
 			self.httpClient.SendEvent(EVENT.Start, 'Blue')
 		debugPrint("End HandleOOF")
 		
 	def HandleDangerZone(self, point):
-		if (self.noneCount == self.NoneCountTH):
+		if (self.noneCount == self.NoneCountTH and self.isNone(point)):
 			if (self.state == STATE.DANGER_ZONE_RED):
 				self.httpClient.SendEvent(EVENT.Goal, 'Blue')
+				self.inGoalZone = False
 				self.debugFile.write("Blue Goal\n")
 			else:
 				self.httpClient.SendEvent(EVENT.Goal, 'Red')
+				self.inGoalZone = False
 				self.debugFile.write("Red Goal\n")
 			self.state = STATE.OOF
 		if not(self.inRedDangerZone(point) or self.inBlueDangerZone(point) or self.isNone(point)):
@@ -135,11 +136,11 @@ class Algorithm:
 	# handling miss by detecting ball entering and leaving goal zone
 	def HandleMiss(self, point):
 		if(self.inGoalZone):
-			if((not self.inBlueGoalZone(point)) and not (self.inRedGoalZone(point)) and not(self.isNone(point))):
+			if((not self.inBlueGoalZone(point)) and not (self.inRedGoalZone(point)) and not (self.isNone(point))):
 				self.inGoalZone = False
 				self.debugFile.write("leaved goal zone")
 				if(self.enteredGoalZonePoint + self.MissPointCountTH >= self.pointsCount):
-					self.httpClient.SendEvent(EVENT.Miss, '')
+					self.httpClient.SendEvent(EVENT.Miss, 'Red') #not really red
 					self.debugFile.write("Sending MISS")
 		else:
 			if(self.inBlueGoalZone(point) or self.inRedGoalZone(point)):
@@ -204,7 +205,7 @@ class EventHook(object):
 def main():
 	y = EventHook()
 	
-	with open("D:\hackathon2016\Algorithm\Data\Vector1469369882184.txt") as f:
+	with open("debug.txt") as f:
 		content = f.readlines()
 	content2 = [[int(x) for x in thing.replace('\n', '').split('\t')] for thing in content]
 	# print(content2)

@@ -9,6 +9,9 @@
 //------------------------------------------------------------------------------
 
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/best100goalscutnosound.mp4")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/brazilgolaso1.mp3")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/buz.mp3")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/fans2.mp3")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/fire1.gif")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/fire2.gif")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/fire3.gif")]
@@ -21,9 +24,13 @@
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/goal.gif")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/goal_zoomout.gif")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/miss.mp3")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/miss2.mp3")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/newgame.mp3")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/soccerballgoal.gif")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/soccerballmiss.gif")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/spanishgoal1.mp3")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/spanishgoal2.mp3")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/spanishgoal3.mp3")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/startgame.mp3")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/table.jpg")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/win.gif")]

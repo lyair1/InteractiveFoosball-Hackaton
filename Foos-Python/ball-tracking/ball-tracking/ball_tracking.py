@@ -66,7 +66,7 @@ def main():
 		vs = WebcamVideoStream(src=0).start()
 
 	if __ENABLE_VIDEO_OUT__:
-		outStream = cv2.VideoWriter('Output/output' + ticks +'.avi', -1, 20.0, (1000,700))
+		outStream = cv2.VideoWriter('Output/output' + ticks +'.avi', -1, 20.0, (1000,705))
 
 	eventHook = EventHook()
 
@@ -75,6 +75,9 @@ def main():
 		# grab the current frame
 		frame = vs.read()
 
+		if frame is None:
+			continue
+		
 		# resize the frame, blur it, and convert it to the HSV
 		# color space
 		frame = imutils.resize(frame, width=1000)
@@ -107,7 +110,7 @@ def main():
 			center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
 
 			# only proceed if the radius meets a minimum size
-			if radius > -1: #Changed from 10
+			if radius > 5: #Changed from 10
 				# draw the circle and centroid on the frame,
 				# then update the list of tracked points
 				cv2.circle(frame, (int(x), int(y)), int(radius),

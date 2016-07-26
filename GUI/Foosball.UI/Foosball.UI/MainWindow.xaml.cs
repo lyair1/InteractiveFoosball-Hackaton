@@ -29,7 +29,21 @@ namespace Foosball.UI
         private int redScore = 0;
         private int blueScore = 0;
 
+        private readonly List<string> goalList = new List<string>
+        {
+            "BrazilGolaso1.mp3",
+            "Goal-Brazil.mp3",
+            "Goal-Meir.mp3",
+            "SpanishGoal1.mp3",
+            "SpanishGoal2.mp3",
+            "SpanishGoal3.mp3"
+        };
+
         long[] possession = new long[3];
+        private Dictionary<Team, int> attempts = new Dictionary<Team, int> {{Team.Blue, 0}, {Team.Red, 0}};
+
+        private bool isGameOn = false;
+        private bool isFirstStart = true;
 
         private MediaPlayer mediaPlayer;
 
@@ -75,17 +89,21 @@ namespace Foosball.UI
         {
             for(int i=0; i<3; i++)
             {
-                possession[i] += data[i];
+                this.possession[i] += data[i];
             }
         }
 
         private void OnNewGame(Team team)
         {
-            possession = new long[3];
+            this.possession = new long[3];
+            this.attempts = new Dictionary<Team, int> { { Team.Blue, 0 }, { Team.Red, 0 } };
 
             this.redScore = 0;
             this.blueScore = 0;
             UpdateScoreBoard();
+
+            this.isGameOn = true;
+            this.isFirstStart = true;
 
             PlayFile("NewGame.mp3");
 
@@ -109,12 +127,27 @@ namespace Foosball.UI
 
         private void OnStartEvent(Team team)
         {
+            if (!this.isGameOn)
+            {
+                return;
+            }
+            
+            int randomNum = new Random().Next(0,1);
             Dispatcher.Invoke(() => this.DockPanel.Children.Clear());
-            PlayFile("StartGame.mp3");
+            PlayFile(randomNum == 0 ? "fans2.mp3" : "Buz.mp3");
+            PlayFile(this.isFirstStart ? "AirHorn.mp3" : "StartGame.mp3");
+            this.isFirstStart = false;
         }
 
         private void OnGoalEvent(Team team)
         {
+            if (!this.isGameOn)
+            {
+                return;
+            }
+
+            this.attempts[team]++;
+
             if (team == Team.Blue)
             {
                 this.blueScore++;
@@ -197,11 +230,20 @@ namespace Foosball.UI
                 });
             }
 
-            PlayFile(team == Team.Blue ? @"Goal-Brazil.mp3" : @"Goal-Meir.mp3");
+
+            int randomNum = new Random().Next(0, this.goalList.Count-1);
+            PlayFile(this.goalList[randomNum]);
         }
 
         private void Win(Color winnerColor)
         {
+            if (!this.isGameOn)
+            {
+                return;
+            }
+
+            this.isGameOn = false;
+
             Dispatcher.Invoke(() =>
             {
                 this.DockPanel.Children.Clear();
@@ -239,8 +281,14 @@ namespace Foosball.UI
 
             Task.Factory.StartNew(() =>
             {
-                Task.Delay(50000).Wait();
-                Dispatcher.Invoke(() => { this.DockPanel.Children.Clear(); });
+                Task.Delay(10000).Wait();
+                Dispatcher.Invoke(() =>
+                {
+                    this.DockPanel.Children.Clear();
+                    var grid = new Grid();
+                    //grid.ColumnDefinitions = new ColumnDefinitionCollection();
+                    //this.DockPanel.
+                });
             });
 
             PlayFile("Win.mp3");
@@ -248,6 +296,13 @@ namespace Foosball.UI
 
         private void OnMissEvent(Team team)
         {
+            if (!this.isGameOn)
+            {
+                return;
+            }
+
+            this.attempts[team]++;
+
             Dispatcher.Invoke(() =>
             {
                 this.DockPanel.Children.Clear();
@@ -259,7 +314,8 @@ namespace Foosball.UI
                 });
             });
 
-            PlayFile("Miss.mp3");
+            int randomNum = new Random().Next(0, 1);
+            PlayFile(randomNum == 0 ? "Miss.mp3" : "miss2.mp3");
 
             Task.Factory.StartNew(() =>
             {
