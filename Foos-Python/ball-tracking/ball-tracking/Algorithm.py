@@ -31,17 +31,17 @@ class GuiHttpClient(object):
 		debugPrint("Send event")
 
 	def SendPossession(self, blue, center, red):
-		# r = requests.post('http://localhost/foosballApi/', data = "Possession" + '*' + blue + '*' + center+ '*' + red)
-		# if(r.status_code != requests.codes.ok):
-			# r.raise_for_status()
+		r = requests.post('http://localhost/foosballApi/', data = "Possession" + '*' + str(blue) + '*' + str(center)+ '*' + str(red))
+		if(r.status_code != requests.codes.ok):
+			r.raise_for_status()
 		debugPrint("Possession" + '*' + str(blue) + '*' + str(center)+ '*' + str(red))
 
 		debugPrint("End SendPossessions")
 
 	def sendHotSpots(self, possessionMatrix):
-		# r = requests.post('http://localhost/foosballApi/', data = "HotSpots" + '*' + possessionMatrix)
-		# if(r.status_code != requests.codes.ok):
-			# r.raise_for_status()
+		r = requests.post('http://localhost/foosballApi/', data = "HotSpots" + '*' + possessionMatrix)
+		if(r.status_code != requests.codes.ok):
+			r.raise_for_status()
 		debugPrint("HotSpots" + '*' + str(possessionMatrix[0][0]))
 
 		debugPrint("End SendHotSpot")
