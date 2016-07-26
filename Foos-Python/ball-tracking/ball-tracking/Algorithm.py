@@ -31,7 +31,7 @@ class Algorithm:
 	
 	NoneCountTH = 20
 	MissPointCountTH = 15
-	inGoalZone = false
+	inGoalZone = False
 	enteredGoalZonePoint = -50
 	
 	possessionMatrix = []
@@ -113,12 +113,12 @@ class Algorithm:
 	def HandleMiss(self, point):
 		if(inGoalZone):
 			if((not inBlueGoalZone(point)) and not (inRedGoalZone(point))):
-				self.inGoalZone = false
+				self.inGoalZone = False
 				if(self.enteredGoalZonePoint + MissPointCountTH >= self.pointsCount):
 					self.httpClient.SendEvent(EVENT.MISS, 'MISS')
 		else:
 			if(inBlueGoalZone(point) or inRedGoalZone(point)):
-				self.inGoalZone = true
+				self.inGoalZone = True
 				self.enteredGoalZonePoint = self.pointsCount
 				
 
