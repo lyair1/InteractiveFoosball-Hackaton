@@ -25,13 +25,11 @@ class GuiHttpClient(object):
 
 
 class Algorithm:
-	Length = 5
-	Width = 3
 	NoneCountTH = 35
 	Length = 2000
 	Width = 1000
 	NoneCountTH = 20
-	possesionMatrix = []
+	possessionMatrix = []
 	noneCount = 0
 	httpClient = GuiHttpClient()
 	redDangerZoneCount = 0
@@ -93,14 +91,23 @@ class Algorithm:
 			self.centerZoneCount+=1
 		
 		sumPossession = self.redDangerZoneCount + self.blueDangerZoneCount + self.centerZoneCount
-		if(sumPossession % 10 ==0):
+		if(sumPossession % 10 == 0):
 			self.httpClient.SendEvent(EVENT.POSSESSION, self.blueDangerZoneCount/float(sumPossession), self.centerZoneCount/float(sumPossession), self.redDangerZoneCount/float(sumPossession))
+			
+		if(sumPossession % 500 == 0):
+			self.httpClient.sendEvent(EVENT.HOTSPOTS, self.possesionMatrix)
 
 			
 	def __init__(self):
 		self.state = STATE.OOF
 		self.redDangerZoneCount = 0
 		self.blueDangerZoneCount = 0
+		
+		for i in range(self.Width / 100):
+            self.possesionMatrix.append([])
+            for j in range(self.Length / 100):
+                self.possesionMatrix[i].append(0)
+
 
 		self.debugFile = open("debug", "w")
 		debugPrint("End main")
@@ -114,6 +121,7 @@ class Algorithm:
 			if (point[0] == -1 and point[1] == -1):
 				self.noneCount += 1
 			else:
+				possessionMatrix[point[0]/100][point[1]/100] += 1
 				if self.noneCount > 4 and self.noise < 10 :
 					self.noise+=1
 				else:
