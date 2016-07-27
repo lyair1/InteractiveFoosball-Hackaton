@@ -133,10 +133,16 @@ class Algorithm:
 		sumPossession = self.redDangerZoneCount + self.blueDangerZoneCount + self.centerZoneCount
 		if(sumPossession % 10 == 1):
 			self.httpClient.SendPossession(self.blueDangerZoneCount, self.centerZoneCount, self.redDangerZoneCount)
+			self.redDangerZoneCount = 0
+			self.blueDangerZoneCount = 0
+			self.centerZoneCount = 0
 			
 		if(sumPossession % 500 == 0):
 			self.httpClient.sendHotSpots(self.possessionMatrix)
-			
+			for i in range(self.Width / 100):
+				for j in range(self.Length / 100):
+					self.possessionMatrix[i][j] = 0
+	
 	# handling miss by detecting ball entering and leaving goal zone
 	def HandleMiss(self, point):
 		if(self.inGoalZone):
