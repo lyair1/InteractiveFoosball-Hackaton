@@ -73,3 +73,5 @@ C:\Users\moshec\Documents\InteractiveFoosball-Hackaton\GUI\Foosball.UI\Foosball.
 C:\Users\moshec\Documents\InteractiveFoosball-Hackaton\GUI\Foosball.UI\Foosball.UI\bin\Debug\Resources\SpanishGoal1.mp3
 C:\Users\moshec\Documents\InteractiveFoosball-Hackaton\GUI\Foosball.UI\Foosball.UI\bin\Debug\Resources\SpanishGoal2.mp3
 C:\Users\moshec\Documents\InteractiveFoosball-Hackaton\GUI\Foosball.UI\Foosball.UI\bin\Debug\Resources\SpanishGoal3.mp3
+C:\Users\moshec\Documents\InteractiveFoosball-Hackaton\GUI\Foosball.UI\Foosball.UI\bin\Debug\Resources\goal4.mp3
+C:\Users\moshec\Documents\InteractiveFoosball-Hackaton\GUI\Foosball.UI\Foosball.UI\bin\Debug\Resources\FIFA98.mp3

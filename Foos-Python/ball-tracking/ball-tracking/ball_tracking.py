@@ -22,10 +22,11 @@ replayFrames = []
 
 
 def saveGoalVideo():
-	goalOutStream = cv2.VideoWriter('Output/output_Goal.avi', 0, 20.0, (1000,705))
-	print("saving goal")
-	for f in replayFrames[0:100]:
-		goalOutStream.write(f)
+	goalOutStream = cv2.VideoWriter('Output/output_Goal.avi', 0, 30.0, (600,420))
+	for f in replayFrames:
+		new_f = imutils.resize(f, width=600)
+		new_f = new_f[0:420,0:600]
+		goalOutStream.write(new_f)
 	goalOutStream.release()
 
 def addReplayFrame(_frame):

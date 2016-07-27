@@ -38,8 +38,9 @@ namespace Foosball.UI
             "BrazilGolaso1.mp3",
             "Goal-Brazil.mp3",
             "Goal-Meir.mp3",
-            "SpanishGoal1.mp3",
-            "SpanishGoal2.mp3",
+            "goal4.mp3",
+            // "SpanishGoal1.mp3",
+            // "SpanishGoal2.mp3",
             "SpanishGoal3.mp3"
         };
 
@@ -136,7 +137,8 @@ namespace Foosball.UI
             this.isGameOn = true;
             this.isFirstStart = true;
 
-            PlayFile("NewGame.mp3");
+            var randonNum = new Random().Next(0, 2);
+            PlayFile(randonNum == 1 ? "NewGame.mp3" : "FIFA98.mp3");
 
             Dispatcher.Invoke(() =>
             {
@@ -163,7 +165,7 @@ namespace Foosball.UI
                 return;
             }
             
-            int randomNum = new Random().Next(0,1);
+            int randomNum = new Random().Next(0,2);
             Dispatcher.Invoke(() => this.DockPanel.Children.Clear());
             PlayFile(randomNum == 0 ? "fans2.mp3" : "Buz.mp3");
             PlayFile(this.isFirstStart ? "AirHorn.mp3" : "StartGame.mp3");
@@ -218,39 +220,7 @@ namespace Foosball.UI
                     });
                 });
 
-                Task.Factory.StartNew(() =>
-                {
-                    Task.Delay(4000).Wait();
-                    Dispatcher.Invoke(() =>
-                    {
-                        this.DockPanel.Background = new SolidColorBrush(Colors.Transparent);
-                        this.DockPanel.Children.Clear();
-                        var player = new MediaElement
-                        {
-                            LoadedBehavior = MediaState.Manual,
-                            Source =
-                                new Uri(
-                                    Path.Combine(
-                                        "C:/Users/moshec/Documents/InteractiveFoosball-Hackaton/Foos-Python/ball-tracking/ball-tracking/Output/output_Goal.avi"))
-                        };
-                        this.MainGrid.Children.Add(player);
-                        Grid.SetColumnSpan(player, 2);
-                        Grid.SetRowSpan(player, 2);
-                        player.Play();
-                    });
-                });
-
-                Task.Factory.StartNew(() =>
-                {
-                    Task.Delay(7000).Wait();
-                    Dispatcher.Invoke(() =>
-                    {
-                        this.DockPanel.Background = new SolidColorBrush(Colors.Transparent);
-                        this.DockPanel.Children.Clear();
-                        this.MainGrid.Children.Remove(this.MainGrid.Children.OfType<MediaElement>().Single());
-                        File.Delete("C:/Users/moshec/Documents/InteractiveFoosball-Hackaton/Foos-Python/ball-tracking/ball-tracking/Output/output_Goal.avi");
-                    });
-                });
+                PlayReply();
             }
             else // RED
             {
@@ -274,19 +244,11 @@ namespace Foosball.UI
                     });
                 });
 
-                Task.Factory.StartNew(() =>
-                {
-                    Task.Delay(7000).Wait();
-                    Dispatcher.Invoke(() =>
-                    {
-                        this.DockPanel.Background = new SolidColorBrush(Colors.Transparent);
-                        this.DockPanel.Children.Clear();
-                    });
-                });
+                PlayReply();
             }
 
 
-            int randomNum = rand.Next(0, this.goalList.Count-1);
+            int randomNum = rand.Next(0, this.goalList.Count);
             PlayFile(this.goalList[randomNum]);
         }
 
@@ -385,6 +347,50 @@ namespace Foosball.UI
             Dispatcher.Invoke(ChangeBgColor);
         }
 
+
+        private void PlayReply()
+        {
+            Task.Factory.StartNew(() =>
+            {
+                Task.Delay(4000).Wait();
+                Dispatcher.Invoke(() =>
+                {
+                    this.DockPanel.Background = new SolidColorBrush(Colors.Transparent);
+                    this.DockPanel.Children.Clear();
+                    var player = new MediaElement
+                    {
+                        LoadedBehavior = MediaState.Manual,
+                        Source =
+                            new Uri(
+                                Path.Combine(
+                                    "C:/Users/moshec/Documents/InteractiveFoosball-Hackaton/Foos-Python/ball-tracking/ball-tracking/Output/output_Goal.avi"))
+                    };
+                    this.MainGrid.Children.Add(player);
+                    Grid.SetColumnSpan(player, 2);
+                    Grid.SetRowSpan(player, 2);
+                    player.Play();
+                });
+            });
+
+            Task.Factory.StartNew(() =>
+            {
+                Task.Delay(8000).Wait();
+                Dispatcher.Invoke(() =>
+                {
+                    this.DockPanel.Background = new SolidColorBrush(Colors.Transparent);
+                    this.DockPanel.Children.Clear();
+                    //this.MainGrid.Children.OfType<MediaElement>().Single().Visibility = Visibility.Hidden;
+                    this.MainGrid.Children.Remove(this.MainGrid.Children.OfType<MediaElement>().Single());
+                });
+            });
+
+            Task.Factory.StartNew(() =>
+            {
+                Task.Delay(5000).Wait();
+                File.Delete(
+                    "C:/Users/moshec/Documents/InteractiveFoosball-Hackaton/Foos-Python/ball-tracking/ball-tracking/Output/output_Goal.avi");
+            });
+        }
        
         private void UpdateScoreBoard()
         {
