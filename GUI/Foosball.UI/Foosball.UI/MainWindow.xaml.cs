@@ -4,7 +4,9 @@ namespace Foosball.UI
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Diagnostics;
     using System.IO;
+    using System.IO.Pipes;
     using System.Linq;
     using System.Reflection;
     using System.Threading;
@@ -12,6 +14,9 @@ namespace Foosball.UI
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Media;
+    using System.Windows.Media.Imaging;
+    using System.Windows.Shapes;
+    using Path = System.IO.Path;
 
     public enum Team
     {
@@ -31,6 +36,8 @@ namespace Foosball.UI
         private int redScore = 0;
         private int blueScore = 0;
 
+        private int gameGoals = 3;
+
         private static Random rand = new Random();
 
         private readonly List<string> goalList = new List<string>
@@ -41,7 +48,8 @@ namespace Foosball.UI
             "goal4.mp3",
             // "SpanishGoal1.mp3",
             // "SpanishGoal2.mp3",
-            "SpanishGoal3.mp3"
+            "SpanishGoal3.mp3",
+            "harush.mp3"
         };
 
         long[] possession = new long[3];
@@ -54,6 +62,7 @@ namespace Foosball.UI
         private MediaPlayer mediaPlayer;
 
         private readonly HttpCommandsManager httpManager;
+        private Process p;
 
         // Define event
         public event HttpEvent NewGame;
@@ -67,6 +76,9 @@ namespace Foosball.UI
 
         public MainWindow()
         {
+            string cmd = @"/c start python C:\Users\moshec\Documents\InteractiveFoosball-Hackaton\Foos-Python\ball-tracking\ball-tracking\ball_tracking.py";
+            p = Process.Start("cmd.exe", cmd);
+            
             InitializeComponent();
 
             // Assign a function
@@ -91,11 +103,13 @@ namespace Foosball.UI
                 {"Miss", MissEvent},
                 {"Status", StatusEvent}
             });
+
+            OnNewGame(Team.Blue);
         }
 
         private void OnHotspotEvent(List<List<int>> data)
         {
-            if (!this.hotspots[0].Any())
+            if (this.hotspots[0] == null || !this.hotspots[0].Any())
             {
                 for (int i = 0; i < 20; i++)
                 {
@@ -147,7 +161,8 @@ namespace Foosball.UI
                 {
                     //Height = 700,
                     //Width = 700,
-                    Source = new Uri(Path.Combine(Directory.GetCurrentDirectory(), "Resources", "Best100GoalsCutNoSound.mp4"))
+                    Source = new Uri(Path.Combine(Directory.GetCurrentDirectory(), "Resources", "Goals.mp4")),
+                    IsMuted = true
                 });
             });
 
@@ -192,7 +207,7 @@ namespace Foosball.UI
                 UpdateScoreBoard();
             }
 
-            if (this.redScore == 5 || this.blueScore == 5)
+            if (this.redScore == gameGoals || this.blueScore == gameGoals)
             {
                 Win(this.redScore > this.blueScore ? Colors.Red : Colors.Blue);
                 return;
@@ -203,7 +218,7 @@ namespace Foosball.UI
                 Dispatcher.Invoke(() =>
                 {
                     this.DockPanel.Children.Clear();
-                    this.DockPanel.Background = new SolidColorBrush(Colors.Blue);
+                    //this.DockPanel.Background = new SolidColorBrush(Colors.Blue);
                     this.DockPanel.Children.Add(new MediaElement
                     {
                         Height = 550,
@@ -227,7 +242,7 @@ namespace Foosball.UI
                 Dispatcher.Invoke(() =>
                 {
                     this.DockPanel.Children.Clear();
-                    this.DockPanel.Background = new SolidColorBrush(Colors.Red);
+                    //this.DockPanel.Background = new SolidColorBrush(Colors.Red);
                     this.DockPanel.Children.Add(new MediaElement
                     {
                         Height = 900,
@@ -264,7 +279,7 @@ namespace Foosball.UI
             Dispatcher.Invoke(() =>
             {
                 this.DockPanel.Children.Clear();
-                this.DockPanel.Background = new SolidColorBrush(winnerColor);
+                //this.DockPanel.Background = new SolidColorBrush(winnerColor);
                 this.DockPanel.Orientation = Orientation.Horizontal;
                 this.DockPanel.Children.Add(new MediaElement
                 {
@@ -302,9 +317,16 @@ namespace Foosball.UI
                 Dispatcher.Invoke(() =>
                 {
                     this.DockPanel.Children.Clear();
-                    var grid = new Grid();
-                    //grid.ColumnDefinitions = new ColumnDefinitionCollection();
-                    //this.DockPanel.
+
+                    StackPanel stackPanel = new StackPanel() {Orientation = Orientation.Vertical, HorizontalAlignment = HorizontalAlignment.Stretch};
+
+                    Grid statsGrid = GetStatsGrid();
+                    stackPanel.Children.Add(statsGrid);
+
+                    Grid grid = GetGotspotGrid();
+                    stackPanel.Children.Add(grid);
+
+                    this.DockPanel.Children.Add(stackPanel);
                 });
             });
 
@@ -331,7 +353,7 @@ namespace Foosball.UI
                 });
             });
 
-            int randomNum = new Random().Next(0, 1);
+            int randomNum = new Random().Next(0, 2);
             PlayFile(randomNum == 0 ? "Miss.mp3" : "miss2.mp3");
 
             Task.Factory.StartNew(() =>
@@ -348,6 +370,79 @@ namespace Foosball.UI
         }
 
 
+        private Grid GetStatsGrid()
+        {
+            var statsGrid = new Grid() { HorizontalAlignment = HorizontalAlignment.Stretch };
+
+            statsGrid.ColumnDefinitions.Add(new ColumnDefinition());
+            statsGrid.ColumnDefinitions.Add(new ColumnDefinition());
+            statsGrid.ColumnDefinitions.Add(new ColumnDefinition());
+
+            statsGrid.RowDefinitions.Add(new RowDefinition());
+
+            var label = new Label() { FontSize = 50, Content = "Attempts", Width = 250 };
+            statsGrid.Children.Add(label);
+            Grid.SetColumn(label, 1);
+
+            label = new Label() { FontSize = 50, Content = this.attempts[Team.Red], Width = 150};
+            statsGrid.Children.Add(label);
+            Grid.SetColumn(label, 2);
+
+            label = new Label() { FontSize = 50, Content = this.attempts[Team.Blue], Width = 150 };
+            statsGrid.Children.Add(label);
+            Grid.SetColumn(label, 0);
+
+            return statsGrid;
+        }
+
+        private Grid GetGotspotGrid()
+        {
+            var grid = new Grid()
+            {
+                Margin = new Thickness(0,150,0,0),
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                VerticalAlignment = VerticalAlignment.Stretch,
+                //MinWidth = this.DockPanel.ActualWidth,
+                //MinHeight = this.DockPanel.ActualHeight,
+                Background =
+                    new ImageBrush()
+                    {
+                        ImageSource =
+                            new BitmapImage(new Uri(Path.Combine(Directory.GetCurrentDirectory(), "Resources", "field.jpg")))
+                    }
+            };
+            for (int i = 0; i < 20; i++)
+            {
+                grid.ColumnDefinitions.Add(new ColumnDefinition());
+            }
+            for (int i = 0; i < 10; i++)
+            {
+                grid.RowDefinitions.Add(new RowDefinition());
+            }
+
+            var max = this.hotspots.Max(s => s.Max());
+
+            for (int i = 0; i < this.hotspots.Length; i++)
+            {
+                for (int j = 0; j < this.hotspots[i].Length; j++)
+                {
+                    double ratio = this.hotspots[i][j] / (double)max;
+                    int intRatio = 255 - (int)(ratio * 255);
+                    intRatio -= 100;
+                    if (intRatio < 0)
+                        intRatio = 0;
+
+                    byte red = (byte)intRatio;
+                    var panel = new DockPanel { Height = 50, Width = 50, Background = new RadialGradientBrush(Color.FromRgb(255, red, red), Colors.Transparent) };
+                    grid.Children.Add(panel);
+                    Grid.SetRow(panel, j);
+                    Grid.SetColumn(panel, i);
+                }
+            }
+
+            return grid;
+        }
+
         private void PlayReply()
         {
             Task.Factory.StartNew(() =>
@@ -362,8 +457,8 @@ namespace Foosball.UI
                         LoadedBehavior = MediaState.Manual,
                         Source =
                             new Uri(
-                                Path.Combine(
-                                    "C:/Users/moshec/Documents/InteractiveFoosball-Hackaton/Foos-Python/ball-tracking/ball-tracking/Output/output_Goal.avi"))
+
+                                "C:/Users/moshec/Documents/InteractiveFoosball-Hackaton/Foos-Python/ball-tracking/ball-tracking/Output/output_Goal.avi")
                     };
                     this.MainGrid.Children.Add(player);
                     Grid.SetColumnSpan(player, 2);
@@ -380,7 +475,11 @@ namespace Foosball.UI
                     this.DockPanel.Background = new SolidColorBrush(Colors.Transparent);
                     this.DockPanel.Children.Clear();
                     //this.MainGrid.Children.OfType<MediaElement>().Single().Visibility = Visibility.Hidden;
-                    this.MainGrid.Children.Remove(this.MainGrid.Children.OfType<MediaElement>().Single());
+                    var reply = this.MainGrid.Children.OfType<MediaElement>().FirstOrDefault();
+                    if (reply != null)
+                    {
+                        this.MainGrid.Children.Remove(reply);
+                    }
                 });
             });
 

@@ -18,6 +18,6 @@
         <Label Grid.Row="0" Grid.Column="0" Name="BlueScoreLabel" FontFamily="Ariel" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="130" Foreground="Blue">Blue: 0</Label>
         <Label Grid.Row="0" Grid.Column="1" Name="RedScoreLabel" FontFamily="Ariel" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="130" Foreground="Red">Red: 0</Label>
         
-        <StackPanel Grid.ColumnSpan="2" Name="DockPanel" Orientation="Vertical" Grid.Row="2"></StackPanel>
+        <StackPanel Grid.ColumnSpan="2" Name="DockPanel" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Stretch" Grid.Row="2"></StackPanel>
     </Grid>
 </Window>

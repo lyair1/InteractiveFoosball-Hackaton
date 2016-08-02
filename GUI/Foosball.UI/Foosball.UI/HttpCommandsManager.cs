@@ -14,11 +14,13 @@ namespace Foosball.UI
         private readonly HttpListener listener;
 
         private readonly List<string> prefixes = new List<string> { "http://localhost/foosballApi/" };
-        private HttpData possessionEvent;
+        private readonly HttpData possessionEvent;
+        private readonly HttpMatrix onHotspotEvent;
 
         public HttpCommandsManager(HttpData possessionEvent, HttpMatrix onHotspotEvent, Dictionary<string, HttpEvent> events)
         {
             this.possessionEvent = possessionEvent;
+            this.onHotspotEvent = onHotspotEvent;
             this.events = events;
             this.listener = new HttpListener();
             foreach (string prefix in this.prefixes)
@@ -63,7 +65,8 @@ namespace Foosball.UI
                                 hotSpotMatrix.Add(row.Replace("[", "").Replace("]", "").Split(',').Select(s => s.Trim()).ToList());
                             }
 
-
+                            //hotSpotMatrix.Select(r => r.Select(s => Int32.Parse(s)).ToArray()).ToArray()
+                            this.onHotspotEvent(hotSpotMatrix.Select(l => l.Select(Int32.Parse).ToList()).ToList());
                         }
                         else // Regular commands
                         {

@@ -155,7 +155,7 @@ class Algorithm:
 		else:
 			if(self.inBlueGoalZone(point) or self.inRedGoalZone(point)):
 				self.inGoalZone = True
-				if self.inBlueGoalZone:
+				if self.inBlueGoalZone(point):
 					self.attacker = 'Red'
 				else:
 					self.attacker = 'Blue'

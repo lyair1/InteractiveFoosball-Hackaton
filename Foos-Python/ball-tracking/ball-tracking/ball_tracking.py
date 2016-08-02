@@ -22,7 +22,7 @@ replayFrames = []
 
 
 def saveGoalVideo():
-	goalOutStream = cv2.VideoWriter('Output/output_Goal.avi', 0, 30.0, (600,420))
+	goalOutStream = cv2.VideoWriter('C:/Users/moshec/Documents/InteractiveFoosball-Hackaton/Foos-Python/ball-tracking/ball-tracking/Output/output_Goal.avi', 0, 30.0, (600,420))
 	for f in replayFrames:
 		new_f = imutils.resize(f, width=600)
 		new_f = new_f[0:420,0:600]
