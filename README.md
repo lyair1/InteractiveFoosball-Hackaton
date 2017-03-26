@@ -33,3 +33,7 @@ Prepare your environment for Python:
 
 
 Checkout the POC here: https://www.youtube.com/watch?v=h8S8-cjuWZo
+
+
+And also... The final result from Microsoft's hackathon in Israel: https://www.youtube.com/watch?v=GB3ThmAb_h8&t=5s
+
